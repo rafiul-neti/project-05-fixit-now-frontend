@@ -154,9 +154,19 @@ export function Navbar({ user }: NavbarProps) {
               </DropdownMenu>
             </div>
           ) : (
-            <Link href={"/login"}>
-              <Button className="rounded-sm">Login</Button>
-            </Link>
+            <div className="">
+              <Link href={"/login"}>
+                <Button className="rounded-sm bg-[#486581]" size={`lg`}>
+                  Login
+                </Button>
+              </Link>
+
+              <Link href={"/register"} className="m-1">
+                <Button className={`rounded-sm bg-[#062b52]`} size={`lg`}>
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </div>
