@@ -4,7 +4,7 @@
 |---|---|---|---|
 | Navbar / User Info | GET | `/api/auth/me` | Fetch the currently authenticated user's information |
 | Services Section | GET | `/api/services` | Fetch and display all available services |
-| TechniciansSection | GET | `/api/technicians` | Get and display available technicians with their services, ratings, and review counts. |
+| Technicians Section | GET | `/api/technicians` | Get and display available technicians with their services, ratings, and review counts. |
 
 ## Endpoints Used
 

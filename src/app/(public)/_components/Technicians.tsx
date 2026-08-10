@@ -5,9 +5,8 @@ import { Star } from "lucide-react";
 import { TechniciansSectionProps } from "../_types";
 
 export default function Technicians({ technicians }: TechniciansSectionProps) {
-  console.log(technicians);
   return (
-    <section className="py-16 sm:py-20">
+    <section className="">
       <div className="fixit-container">
         {/* Section Heading */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
@@ -21,7 +20,6 @@ export default function Technicians({ technicians }: TechniciansSectionProps) {
         {/* Technicians */}
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
           {technicians.map((technician, index) => {
-            console.log(technician);
             const averageRating =
               technician.reviews.length > 0
                 ? technician.reviews.reduce(
