@@ -50,3 +50,17 @@ type Technician = {
 export interface TechniciansSectionProps {
   technicians: Technician[];
 }
+
+// reviews
+type Review = {
+  id: string;
+  content: string;
+  givenStars: number;
+  user: {
+    name: string;
+  };
+};
+
+export interface TestimonialProps {
+  reviews: Review[];
+}
