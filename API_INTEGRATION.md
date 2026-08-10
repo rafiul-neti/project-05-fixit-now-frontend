@@ -5,6 +5,7 @@
 | Navbar / User Info | GET | `/api/auth/me` | Fetch the currently authenticated user's information |
 | Services Section | GET | `/api/services` | Fetch and display all available services |
 | Technicians Section | GET | `/api/technicians` | Get and display available technicians with their services, ratings, and review counts. |
+| Testimonial | GET | `/api/reviews` | Get customer reviews and display them as testimonials. |
 
 ## Endpoints Used
 
@@ -16,3 +17,6 @@ Used to retrieve all available services and display them in the home page servic
 
 ### `GET /api/technicians`
 Used to retrieve available technicians and display them in the home page technicians section.
+
+### `GET /api/reviews`
+Used to retrieve reviews from users and display them in the home page testimonial section.
