@@ -13,6 +13,7 @@ import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface NavItem {
   label: string;
@@ -95,12 +96,21 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <nav className="border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-[calc(100%-2rem)] max-w-7xl">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="shrink-0">
-            <Link href="/" className="text-xl font-bold text-foreground">
-              MyApp
+          <div className="">
+            <Link
+              href="/"
+              className="text-xl font-bold text-foreground flex items-center"
+            >
+              <Image
+                src={`/fixit_now_logo.webp`}
+                width={50}
+                height={50}
+                alt="FixItNow - Home Services at Your Doorstep"
+              />
+              <h3>FixitNow</h3>
             </Link>
           </div>
 
@@ -155,15 +165,18 @@ export function Navbar({ user }: NavbarProps) {
             </div>
           ) : (
             <div className="">
-              <Link href={"/login"}>
-                <Button className="rounded-sm bg-[#486581]" size={`lg`}>
-                  Login
-                </Button>
-              </Link>
-
               <Link href={"/register"} className="m-1">
                 <Button className={`rounded-sm bg-[#062b52]`} size={`lg`}>
                   Sign Up
+                </Button>
+              </Link>
+
+              <Link href={"/login"}>
+                <Button
+                  className="rounded-sm bg-(--color-primary-hover)"
+                  size={`lg`}
+                >
+                  Login
                 </Button>
               </Link>
             </div>
