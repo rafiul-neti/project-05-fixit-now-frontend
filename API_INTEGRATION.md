@@ -4,6 +4,7 @@
 |---|---|---|---|
 | Navbar / User Info | GET | `/api/auth/me` | Fetch the currently authenticated user's information |
 | Services Section | GET | `/api/services` | Fetch and display all available services |
+| TechniciansSection | GET | `/api/technicians` | Get and display available technicians with their services, ratings, and review counts. |
 
 ## Endpoints Used
 
@@ -12,3 +13,6 @@ Used to retrieve the current active user's information for authentication state 
 
 ### `GET /api/services`
 Used to retrieve all available services and display them in the home page services section.
+
+### `GET /api/technicians`
+Used to retrieve available technicians and display them in the home page technicians section.
