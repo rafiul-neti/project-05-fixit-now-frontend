@@ -6,9 +6,6 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL("/home", request.url));
 }
 
-// Alternatively, you can use a default export:
-// export default function proxy(request: NextRequest) { ... }
-
 export const config = {
   matcher: "/about/:path*",
 };
