@@ -9,7 +9,7 @@ const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
       <section>
         <Navbar user={user} />
       </section>
-      <main className="mx-auto w-[calc(100%-2rem)] max-w-7xl">{children}</main>
+      <main>{children}</main>
     </>
   );
 };
