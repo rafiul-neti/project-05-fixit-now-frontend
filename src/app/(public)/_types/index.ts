@@ -63,4 +63,5 @@ type Review = {
 
 export interface TestimonialProps {
   reviews: Review[];
+  className?: string;
 }

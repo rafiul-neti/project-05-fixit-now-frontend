@@ -5,8 +5,8 @@ export default function AboutIntro() {
   return (
     <section className="relative overflow-hidden bg-(--color-primary-light) py-20 lg:py-24">
       {/* Decorative background */}
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-(--color-primary)/10 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-(--color-primary)/10 blur-3xl" />
+      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="fixit-container relative">
         <div className="mx-auto max-w-3xl text-center">

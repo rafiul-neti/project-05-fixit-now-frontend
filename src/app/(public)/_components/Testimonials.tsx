@@ -10,9 +10,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { TestimonialProps } from "../_types";
 
-export default function Testimonial({ reviews }: TestimonialProps) {
+export default function Testimonial({ reviews, className }: TestimonialProps) {
   return (
-    <section className="overflow-hidden">
+    <section className={`overflow-hidden ${className && className}`}>
       <div className="fixit-container">
         {/* Section Header */}
         <div className="mx-auto mb-10 max-w-2xl text-center">
