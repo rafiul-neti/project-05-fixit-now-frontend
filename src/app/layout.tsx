@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast";
+import { Navbar } from "@/components/shared/navbar";
+import { getMe } from "@/service/getMe";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,7 +24,8 @@ export const metadata: Metadata = {
     "FixItNow is a modern home service platform that connects customers with trusted professionals for plumbing, cleaning, repairs, and other essential home services.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const user = await getMe()
   return (
     <html
       lang="en"
@@ -36,7 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <Navbar user={user} />
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>
