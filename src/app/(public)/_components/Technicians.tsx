@@ -4,9 +4,12 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { TechniciansSectionProps } from "../_types";
 
-export default function Technicians({ technicians }: TechniciansSectionProps) {
+export default function Technicians({
+  technicians,
+  className,
+}: TechniciansSectionProps) {
   return (
-    <section className="">
+    <section className={`${className && className}`}>
       <div className="fixit-container">
         {/* Section Heading */}
         <div className="mx-auto mb-10 max-w-2xl text-center">

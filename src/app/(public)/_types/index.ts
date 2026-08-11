@@ -49,6 +49,7 @@ type Technician = {
 
 export interface TechniciansSectionProps {
   technicians: Technician[];
+  className?: string;
 }
 
 // reviews
