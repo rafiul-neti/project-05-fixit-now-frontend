@@ -17,7 +17,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get("ohhdishhom") ?? "";
+  const redirectPath = searchParams.get("redirectTo") ?? "";
   const router = useRouter();
 
   const {

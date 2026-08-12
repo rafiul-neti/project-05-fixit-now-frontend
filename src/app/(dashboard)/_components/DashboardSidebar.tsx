@@ -33,7 +33,6 @@ export default function DashboardSidebar({ role }: { role: USER_ROLE }) {
       collapsible="none"
       className=" h-[calc(100svh-0rem)] border-r border-sidebar-border"
     >
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>

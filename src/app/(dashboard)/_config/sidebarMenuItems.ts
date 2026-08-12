@@ -1,4 +1,15 @@
-import { House, LucideProps } from "lucide-react";
+import {
+  House,
+  CalendarPlus,
+  ClipboardList,
+  CreditCard,
+  BriefcaseBusiness,
+  Clock3,
+  CalendarCheck,
+  Users,
+  Tags,
+  LucideProps,
+} from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 export type SidebarItems = {
@@ -18,17 +29,17 @@ const CUSTOMER_SIDEBAR_ITEMS: SidebarItems[] = [
   {
     label: "Book a Service",
     href: "/dashboard/services",
-    icon: House,
+    icon: CalendarPlus,
   },
   {
     label: "My Bookings",
     href: "/dashboard/customer/my-bookings",
-    icon: House,
+    icon: ClipboardList,
   },
   {
     label: "Payments",
     href: "/dashboard/customer/payments",
-    icon: House,
+    icon: CreditCard,
   },
 ];
 
@@ -41,17 +52,17 @@ const TECHNICIAN_SIDEBAR_ITEMS: SidebarItems[] = [
   {
     label: "My Services",
     href: "/dashboard/technician/my-services",
-    icon: House,
+    icon: BriefcaseBusiness,
   },
   {
     label: "Availability",
     href: "/dashboard/technician/set-availability",
-    icon: House,
+    icon: Clock3,
   },
   {
     label: "Bookings",
     href: "/dashboard/technician/view-incoming-bookings",
-    icon: House,
+    icon: CalendarCheck,
   },
 ];
 
@@ -64,17 +75,17 @@ const ADMIN_SIDEBAR_ITEMS: SidebarItems[] = [
   {
     label: "Manage Users",
     href: "/dashboard/admin/manage-users",
-    icon: House,
+    icon: Users,
   },
   {
     label: "Bookings",
     href: "/dashboard/admin/all-bookings",
-    icon: House,
+    icon: ClipboardList,
   },
   {
     label: "Categories",
     href: "/dashboard/admin/all-categories",
-    icon: House,
+    icon: Tags,
   },
 ];
 
