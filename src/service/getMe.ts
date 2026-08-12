@@ -3,11 +3,11 @@
 import { getAccessToken } from "./getAccessToken";
 
 export const getMe = async () => {
-  const accessToken = getAccessToken();
-  if (!accessToken) {
+  const { accessToken, success, message } = await getAccessToken();
+  if (!success) {
     return {
       success: false,
-      message: "User not logged in!",
+      message,
     };
   }
 
@@ -23,6 +23,8 @@ export const getMe = async () => {
   });
 
   const result = await res.json();
+
+  console.log(result);
 
   return result;
 };

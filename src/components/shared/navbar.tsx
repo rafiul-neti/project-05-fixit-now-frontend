@@ -14,6 +14,7 @@ import { logout } from "@/service/logout";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { USER_ROLE } from "@/lib/types/enum";
 
 interface NavItem {
   label: string;
@@ -59,16 +60,18 @@ type TUser = {
     name: string;
     email: string;
     activeStatus: string;
-    role: string;
+    role: USER_ROLE;
     createdAt: Date;
     updatedAt: Date;
-    profile: {
+    technician?: {
       id: string;
       profilePhoto?: string;
       bio?: string;
-      userId: string;
-      createdAt: Date;
-      updatedAt: Date;
+      experienceYears: 10;
+      hourlyRate: 900;
+      serviceAreas: string[];
+      createdAt: string;
+      updatedAt: string;
     };
   };
 };
@@ -89,7 +92,8 @@ export function Navbar({ user }: NavbarProps) {
     } else {
       switch (item.label) {
         case "Dashboard":
-          router.push("/dashboard");
+          router.push(`/dashboard/${user.data.role.toLowerCase()}`);
+          break;
       }
     }
   };

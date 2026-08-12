@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast";
 import { Navbar } from "@/components/shared/navbar";
 import { getMe } from "@/service/getMe";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const user = await getMe()
+  const user = await getMe();
   return (
     <html
       lang="en"
@@ -40,7 +41,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Navbar user={user} />
-        <main>{children}</main>
+        <TooltipProvider>
+          <main>{children}</main>
+        </TooltipProvider>
         <Toaster />
       </body>
     </html>
