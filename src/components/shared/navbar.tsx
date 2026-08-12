@@ -12,9 +12,10 @@ import {
 import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "@/components/ui/toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { USER_ROLE } from "@/lib/types/enum";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   label: string;
@@ -80,6 +81,7 @@ export type NavbarProps = { user: TUser };
 
 export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleMenuItemClick = (item: UserDropdownItem) => {
     if (item.label === "Logout" && item.onClick) {
@@ -120,15 +122,21 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* Nav Links */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
+                    isActive && "bg-muted text-foreground",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* User Dropdown */}
