@@ -1,11 +1,22 @@
-import React from 'react';
+import React from "react";
+import RegisterForm from "../_components/RegisterForm";
 
 const RegisterPage = () => {
-    return (
-        <div>
-            Register Page
+  return (
+    <section>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-md space-y-6 rounded-lg border p-8 shadow-lg">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-bold">Register an account</h1>
+            <p className="text-gray-500">Enter your creadentials to register</p>
+          </div>
+
+          {/* Form */}
+          <RegisterForm />
         </div>
-    );
+      </div>
+    </section>
+  );
 };
 
 export default RegisterPage;

@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { loginAction } from "../../_actions/authActions";
+import { loginAction } from "../_actions/authActions";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
@@ -12,7 +12,7 @@ import { toast } from "@/components/ui/toast";
 import { USER_ROLE } from "@/lib/types/enum";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginInputSchema, LoginPayload } from "../../_validations";
+import { loginInputSchema, LoginInput } from "../_validations";
 import { Field, FieldLabel } from "@/components/ui/field";
 
 const LoginForm = () => {
@@ -24,9 +24,10 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginPayload>({ resolver: zodResolver(loginInputSchema) });
+    setValue,
+  } = useForm<LoginInput>({ resolver: zodResolver(loginInputSchema) });
 
-  const handleLogin = async (data: LoginPayload) => {
+  const handleLogin = async (data: LoginInput) => {
     try {
       const result = await loginAction(data);
 
@@ -34,6 +35,9 @@ const LoginForm = () => {
         type: "success",
         description: result.message,
       });
+
+      setValue("email", "");
+      setValue("password", "");
 
       if (redirectPath) {
         router.push(redirectPath);

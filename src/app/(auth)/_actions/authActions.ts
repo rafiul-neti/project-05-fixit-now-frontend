@@ -2,9 +2,10 @@
 
 // import { LoginPrevState } from "@/lib/types/modules/auth/login.types";
 import { cookies } from "next/headers";
-import { LoginPayload } from "../_validations";
+import { LoginInput, RegisterOutput } from "../_validations";
+import { USER_ROLE } from "@/lib/types/enum";
 
-export const loginAction = async ({ email, password }: LoginPayload) => {
+export const loginAction = async ({ email, password }: LoginInput) => {
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
     method: "POST",
     headers: {
@@ -35,7 +36,36 @@ export const loginAction = async ({ email, password }: LoginPayload) => {
     });
   }
 
-  console.log(result);
+  return result;
+};
+
+export const registerAction = async (data: RegisterOutput) => {
+  const payload = {
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    phone: data.phone,
+    registeringAs: data.registeringAs,
+    profilePhoto: data.profilePhoto,
+
+    ...(data.registeringAs === USER_ROLE.Technician && data.technician),
+  };
+  
+  const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await res.json();
+
+  if (!result.success) {
+    throw new Error(result.message);
+  }
+
+  console.dir(result, { depth: null });
 
   return result;
 };
