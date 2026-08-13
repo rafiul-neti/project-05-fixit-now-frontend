@@ -18,7 +18,7 @@ export const getCustomerBookings = async () => {
 
   const result = await res.json();
 
-  console.log(result.data);
+  console.dir(result.data, { depth: null });
 
   return result.data;
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { getCustomerBookings } from "../_actions/getCustomerBooking";
+import { getCustomerBookings } from "../../_actions/getCustomerBooking";
 import { BookingStatus } from "@/lib/types/enum";
 import { Booking } from "@/lib/types/modules/booking/booking.types";
 import { CalendarClock, CircleCheck, Wrench } from "lucide-react";

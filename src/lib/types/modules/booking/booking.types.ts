@@ -13,4 +13,7 @@ export type Booking = {
   status: BookingStatus;
   createdAt: string;
   updatedAt: string;
+  service: { name: string };
+  technician: { user: { name: string } };
+  address: { city: string; region: string };
 };

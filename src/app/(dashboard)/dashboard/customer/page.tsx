@@ -1,8 +1,9 @@
 import React from "react";
-import HeaderServiceButton from "./_components/HeaderServiceButton";
+import HeaderServiceButton from "./_components/_home/HeaderServiceButton";
 import { getMe } from "@/service/getMe";
-import UpcomingCustomerBookings from "./_components/BookingOverviews";
-import ReviewsQuickOverview from "./_components/ReviewsQuickOverview";
+import UpcomingCustomerBookings from "./_components/_home/BookingOverviews";
+import ReviewsQuickOverview from "./_components/_home/ReviewsQuickOverview";
+import UpcomingBookingSection from "./_components/_home/UpcomingBooking";
 
 const CustomerDashboardPage = async () => {
   const user = await getMe();
@@ -26,6 +27,9 @@ const CustomerDashboardPage = async () => {
         <UpcomingCustomerBookings />
         <ReviewsQuickOverview />
       </div>
+
+      {/* Upcoming Booking */}
+      <UpcomingBookingSection />
     </section>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import QuickOverviewCards from "./QuickOverviewCards";
 import { Star } from "lucide-react";
-import { getCustomerReviews } from "../_actions/getCustomerReviews";
+import { getCustomerReviews } from "../../_actions/getCustomerReviews";
 import { TReview } from "@/lib/types/modules/review/review.types";
 
 const ReviewsQuickOverview = async () => {
