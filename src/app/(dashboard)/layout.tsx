@@ -5,14 +5,15 @@ import DashboardSidebar from "./_components/DashboardSidebar";
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getMe();
+
   return (
     <>
       <section className="">
         <SidebarProvider>
-          <div className="flex">
+          <div className="">
             <DashboardSidebar role={user.data.role} />
-            <main className="flex-1 min-w-0">{children}</main>
           </div>
+          <main className="flex-1 min-w-0">{children}</main>
         </SidebarProvider>
       </section>
     </>
