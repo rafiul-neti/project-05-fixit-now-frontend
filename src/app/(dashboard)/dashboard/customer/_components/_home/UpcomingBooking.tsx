@@ -5,6 +5,7 @@ import { Booking } from "@/lib/types/modules/booking/booking.types";
 import { BookingStatus } from "@/lib/types/enum";
 import { getCustomerBookings } from "../../_actions/getCustomerBooking";
 import HeaderServiceButton from "./HeaderServiceButton";
+import { CalendarDays, MapPin, UserRound } from "lucide-react";
 
 const UpcomingBookingSection = async () => {
   const bookings: Booking[] = await getCustomerBookings();
@@ -24,19 +25,23 @@ const UpcomingBookingSection = async () => {
             {upcomingBookings.map((b: Booking) => (
               <div
                 key={b.id}
-                className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md space-y-2"
+                className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md space-y-3.5"
               >
                 <h4 className="text-lg font-semibold">{b.service.name}</h4>
-                <div className="">
-                  <p>Technician: {b.technician.user.name}</p>
-                  <p>
+                <div className="space-y-1.5">
+                  <p className="flex items-center gap-1.5">
+                    <UserRound /> Technician: {b.technician.user.name}
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <CalendarDays />
                     Date:{" "}
                     {b.startedAt
                       ? new Date(b.startedAt).toLocaleDateString()
                       : new Date(b.createdAt).toLocaleDateString()}
                   </p>
 
-                  <p>
+                  <p className="flex items-center gap-1.5">
+                    <MapPin />
                     Location: {b.address.city}, {b.address.region}
                   </p>
                 </div>
