@@ -11,6 +11,7 @@
 | Login User                 | POST   | `/api/auth/login`         | Login a user                                                                           |
 | Upcoming Booking Overview  | GET    | `/api/bookings`           | To display a countdown of a customer's upcoming booking.                               |
 | To get total reviews count | GET    | `api/reviews/customer`    | To display how many review has been given by a CUSTOMER                                |
+| Get all categories         | GET    | `/api/categories`         | Display Top Categories                                                                 |
 
 ## Endpoints Used
 
@@ -49,3 +50,7 @@ To display a countdown of a customer's upcoming bookings, active and completed s
 ### `GET api/reviews/customer`
 
 To display how many review has been given by a CUSTOMER into the customer's dashboard.
+
+### `GET /api/categories`
+
+To display top categories into the customer's dashboard home page.

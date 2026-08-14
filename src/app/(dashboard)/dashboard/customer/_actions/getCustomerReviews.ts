@@ -1,3 +1,5 @@
+"use server";
+
 import { getAccessToken } from "@/service/getAccessToken";
 
 export const getCustomerReviews = async () => {
@@ -20,8 +22,6 @@ export const getCustomerReviews = async () => {
   );
 
   const result = await res.json();
-
-  console.log(result.data);
 
   return result.data;
 };

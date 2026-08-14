@@ -1,3 +1,5 @@
+"use server"
+
 import { getAccessToken } from "@/service/getAccessToken";
 
 export const getCustomerBookings = async () => {
@@ -17,8 +19,6 @@ export const getCustomerBookings = async () => {
   });
 
   const result = await res.json();
-
-  console.dir(result.data, { depth: null });
 
   return result.data;
 };

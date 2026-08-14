@@ -6,6 +6,7 @@ import { BookingStatus } from "@/lib/types/enum";
 import { getCustomerBookings } from "../../_actions/getCustomerBooking";
 import HeaderServiceButton from "./HeaderServiceButton";
 import { CalendarDays, MapPin, UserRound } from "lucide-react";
+import { formattedDate } from "@/utils/formattedDate";
 
 const UpcomingBookingSection = async () => {
   const bookings: Booking[] = await getCustomerBookings();
@@ -36,8 +37,8 @@ const UpcomingBookingSection = async () => {
                     <CalendarDays />
                     Date:{" "}
                     {b.startedAt
-                      ? new Date(b.startedAt).toLocaleDateString()
-                      : new Date(b.createdAt).toLocaleDateString()}
+                      ? formattedDate(b.startedAt)
+                      : formattedDate(b.createdAt)}
                   </p>
 
                   <p className="flex items-center gap-1.5">

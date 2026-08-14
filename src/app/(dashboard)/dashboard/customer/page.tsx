@@ -4,6 +4,7 @@ import { getMe } from "@/service/getMe";
 import UpcomingCustomerBookings from "./_components/_home/BookingOverviews";
 import ReviewsQuickOverview from "./_components/_home/ReviewsQuickOverview";
 import UpcomingBookingSection from "./_components/_home/UpcomingBooking";
+import ServicesMayNeed from "./_components/_home/ServicesMayNeed";
 
 const CustomerDashboardPage = async () => {
   const user = await getMe();
@@ -23,13 +24,16 @@ const CustomerDashboardPage = async () => {
       </div>
 
       {/* quick overview */}
-      <div className="py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <UpcomingCustomerBookings />
         <ReviewsQuickOverview />
       </div>
 
       {/* Upcoming Booking */}
       <UpcomingBookingSection />
+
+      {/* Service may need section */}
+      <ServicesMayNeed />
     </section>
   );
 };
