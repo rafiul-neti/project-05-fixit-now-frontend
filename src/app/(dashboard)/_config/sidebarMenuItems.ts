@@ -28,7 +28,7 @@ const CUSTOMER_SIDEBAR_ITEMS: SidebarItems[] = [
   },
   {
     label: "Book a Service",
-    href: "/dashboard/services",
+    href: "/dashboard/customer/services",
     icon: CalendarPlus,
   },
   {
