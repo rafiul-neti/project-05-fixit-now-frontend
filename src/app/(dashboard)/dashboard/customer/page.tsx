@@ -5,6 +5,7 @@ import UpcomingCustomerBookings from "./_components/_home/BookingOverviews";
 import ReviewsQuickOverview from "./_components/_home/ReviewsQuickOverview";
 import UpcomingBookingSection from "./_components/_home/UpcomingBooking";
 import ServicesMayNeed from "./_components/_home/ServicesMayNeed";
+import RecentBookings from "./_components/_home/RecentBookings";
 
 const CustomerDashboardPage = async () => {
   const user = await getMe();
@@ -34,6 +35,9 @@ const CustomerDashboardPage = async () => {
 
       {/* Service may need section */}
       <ServicesMayNeed />
+
+      {/* Recent Bookings Section */}
+      <RecentBookings />
     </section>
   );
 };

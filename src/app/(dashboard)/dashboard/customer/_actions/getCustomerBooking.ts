@@ -1,11 +1,17 @@
-"use server"
+"use server";
 
 import { getAccessToken } from "@/service/getAccessToken";
 
-export const getCustomerBookings = async () => {
+export const getCustomerBookings = async ({
+  sortBy,
+  sortOrder,
+}: {
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+} = {}) => {
   const { accessToken } = await getAccessToken();
 
-  const res = await fetch(`${process.env.BACKEND_API_URL}/api/bookings`, {
+  const res = await fetch(`${process.env.BACKEND_API_URL}/api/bookings?sortBy=${sortBy}&sortOrder=${sortOrder}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
