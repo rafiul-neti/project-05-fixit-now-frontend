@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getCustomerBookings } from "../../_actions/getCustomerBooking";
 import { Booking } from "@/lib/types/modules/booking/booking.types";
-import { formattedDate } from "@/utils/formattedDate";
-import ViewBookingButton from "../ViewBookingButton";
+import HeaderServiceButton from "./HeaderServiceButton";
+import BookingTable from "../BookingTable";
 
 const RecentBookings = async () => {
   const bookings: Booking[] = await getCustomerBookings({
@@ -25,49 +16,24 @@ const RecentBookings = async () => {
         Recent Bookings
       </h2>
 
-      <Table>
-        <TableCaption>A list of your recent bookings.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-center font-bold text-base">
-              Service
-            </TableHead>
-            <TableHead className="text-center font-bold text-base">
-              Technician
-            </TableHead>
-            <TableHead className="text-center font-bold text-base">
-              Date
-            </TableHead>
-            <TableHead className="text-center font-bold text-base">
-              Status
-            </TableHead>
-            <TableHead className="text-center font-bold text-base">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {bookings.slice(0, 5).map((booking) => {
-            return (
-              <TableRow key={booking.id}>
-                <TableCell className="text-center font-medium">
-                  {booking.service.name}
-                </TableCell>
-                <TableCell className="text-center">
-                  {booking.technician.user.name}
-                </TableCell>
-                <TableCell className="text-center">
-                  {formattedDate(booking.updatedAt)}
-                </TableCell>
-                <TableCell className="text-center">{booking.status}</TableCell>
-                <TableCell className="text-center">
-                  <ViewBookingButton boookingId={booking.id} />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      {bookings.length ? (
+        <BookingTable
+          bookings={bookings.slice(0, 5)}
+          caption="A list of your recent bookings."
+        />
+      ) : (
+        <div className="flex flex-col gap-4 items-center rounded-xl border border-border bg-card p-5 shadow-xs transition-shadow hover:shadow-md">
+          <h3 className="text-xl font-semibold tracking-tight">
+            No Recent bookings
+          </h3>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            Need something fixed? Find a technician and book a service.
+          </p>
+
+          <HeaderServiceButton />
+        </div>
+      )}
     </div>
   );
 };

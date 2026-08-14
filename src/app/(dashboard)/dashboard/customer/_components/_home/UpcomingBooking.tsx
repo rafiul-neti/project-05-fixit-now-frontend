@@ -17,7 +17,7 @@ const UpcomingBookingSection = async () => {
 
   return (
     <>
-      {upcomingBookings.length ? (
+      {bookings.length && upcomingBookings.length ? (
         <div className="">
           <h2 className="pb-4 text-2xl font-semibold tracking-tight">
             Upcoming Booking
