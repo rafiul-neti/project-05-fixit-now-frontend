@@ -1,18 +1,19 @@
 # API Integration
 
-| Frontend Feature           | Method | Endpoint                   | Purpose                                                                                |
-| -------------------------- | ------ | -------------------------- | -------------------------------------------------------------------------------------- |
-| Navbar / User Info         | GET    | `/api/auth/me`             | Fetch the currently authenticated user's information                                   |
-| Services Section           | GET    | `/api/services`            | Fetch and display all available services                                               |
-| Technicians Section        | GET    | `/api/technicians`         | Get and display available technicians with their services, ratings, and review counts. |
-| Testimonial                | GET    | `/api/reviews`             | Get customer reviews and display them as testimonials.                                 |
-| Get a New Access Token     | POST   | `/api/auth/refresh-token`  | Get a new access token using the refresh token                                         |
-| Register a User            | POST   | `/api/auth/register`       | Registering a user into the app                                                        |
-| Login User                 | POST   | `/api/auth/login`          | Login a user                                                                           |
-| Upcoming Booking Overview  | GET    | `/api/bookings`            | To display a countdown of a customer's upcoming booking.                               |
-| To get total reviews count | GET    | `api/reviews/customer`     | To display how many review has been given by a CUSTOMER                                |
-| Get all categories         | GET    | `/api/categories`          | Display Top Categories                                                                 |
-| Get Single Booking Details | GET    | `/api/bookings/:bookingId` | To display a customer's booking details                                                |
+| Frontend Feature           | Method | Endpoint                          | Purpose                                                                                |
+| -------------------------- | ------ | --------------------------------- | -------------------------------------------------------------------------------------- |
+| Navbar / User Info         | GET    | `/api/auth/me`                    | Fetch the currently authenticated user's information                                   |
+| Services Section           | GET    | `/api/services`                   | Fetch and display all available services                                               |
+| Technicians Section        | GET    | `/api/technicians`                | Get and display available technicians with their services, ratings, and review counts. |
+| Testimonial                | GET    | `/api/reviews`                    | Get customer reviews and display them as testimonials.                                 |
+| Get a New Access Token     | POST   | `/api/auth/refresh-token`         | Get a new access token using the refresh token                                         |
+| Register a User            | POST   | `/api/auth/register`              | Registering a user into the app                                                        |
+| Login User                 | POST   | `/api/auth/login`                 | Login a user                                                                           |
+| Upcoming Booking Overview  | GET    | `/api/bookings`                   | To display a countdown of a customer's upcoming booking.                               |
+| To get total reviews count | GET    | `api/reviews/customer`            | To display how many review has been given by a CUSTOMER                                |
+| Get all categories         | GET    | `/api/categories`                 | Display Top Categories                                                                 |
+| Get Single Booking Details | GET    | `/api/bookings/:bookingId`        | To display a customer's booking details                                                |
+| Create Payment Session     | POST   | `/api/payments/create/:bookingId` | Get payment URL from Stripe                                                            |
 
 ## Endpoints Used
 
@@ -59,3 +60,7 @@ To display top categories into the customer's dashboard home page.
 ### `GET /api/bookings/:bookingId`
 
 Displays full booking details of a customer into the customer's `/my-bookings/[bookingId]` route.
+
+### `POST /api/payments/create/:bookingId`
+
+Create payment session and get the payment URL.

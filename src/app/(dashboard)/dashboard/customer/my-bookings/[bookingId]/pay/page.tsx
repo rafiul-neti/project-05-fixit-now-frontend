@@ -85,7 +85,6 @@ export default async function PayBookingPage({
 
         <div className="mt-6">
           <ConfirmPaymentButton bookingId={booking.id} />
-          
         </div>
       </div>
     </div>
