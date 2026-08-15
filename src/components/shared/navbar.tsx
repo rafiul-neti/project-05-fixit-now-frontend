@@ -9,13 +9,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { LayoutDashboard, LogOut, Menu, Settings, User } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "@/components/ui/toast";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { USER_ROLE } from "@/lib/types/enum";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface NavItem {
   label: string;
@@ -82,6 +91,7 @@ export type NavbarProps = { user: TUser };
 export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const handleMenuItemClick = (item: UserDropdownItem) => {
     if (item.label === "Logout" && item.onClick) {
@@ -101,23 +111,63 @@ export function Navbar({ user }: NavbarProps) {
   };
 
   return (
-    <nav className="border-b border-border bg-background">
-      <div className="mx-auto w-[calc(100%-2rem)] max-w-7xl">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="">
-            <Link
-              href="/"
-              className="text-xl font-bold text-foreground flex items-center"
-            >
-              <Image
-                src={`/fixit_now_logo.webp`}
-                width={50}
-                height={50}
-                alt="FixItNow - Home Services at Your Doorstep"
-              />
-              <h3>FixitNow</h3>
-            </Link>
+    <nav className="sticky top-0 z-30 border-b border-border bg-background/95">
+      <div className="mx-auto lg:w-[calc(100%-2rem)] max-w-7xl">
+        <div className="flex items-center justify-between h-16 p-1.5 lg:p-0">
+          <div className="flex items-center">
+            {/* Mobile Nav Trigger */}
+            <div className="md:hidden">
+              <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+                <SheetTrigger
+                  render={<Button variant="ghost" size="icon-lg" />}
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-5 w-5" />
+                </SheetTrigger>
+                <SheetContent side="left" className="w-64 p-0">
+                  <SheetHeader className="border-b border-border">
+                    <SheetTitle className="text-left">Menu</SheetTitle>
+                    <SheetDescription className="sr-only">
+                      Site navigation
+                    </SheetDescription>
+                  </SheetHeader>
+                  <nav className="flex flex-col gap-1 p-4">
+                    {navItems.map((item) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileNavOpen(false)}
+                          className={cn(
+                            "px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
+                            isActive && "bg-muted text-foreground",
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+            {/* Logo */}
+            <div className="">
+              <Link
+                href="/"
+                className="text-xl font-bold text-foreground flex items-center"
+              >
+                <Image
+                  src={`/fixit_now_logo.webp`}
+                  width={50}
+                  height={50}
+                  alt="FixItNow - Home Services at Your Doorstep"
+                />
+                <h3 className="hidden lg:block">FixitNow</h3>
+              </Link>
+            </div>
           </div>
 
           {/* Nav Links */}

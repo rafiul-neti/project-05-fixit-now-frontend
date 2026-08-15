@@ -33,9 +33,11 @@ export async function createPaymentSession(id: { bookingId: string }) {
 
   const result = await res.json();
 
-  if (result.success) {
-    revalidateTag("customer-bookings", "max");
+  if (!result.success) {
+    throw new Error(result.message);
   }
+
+  revalidateTag("customer-bookings", "max");
 
   return result.data.paymentURL;
 }

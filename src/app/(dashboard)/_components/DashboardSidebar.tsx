@@ -29,8 +29,8 @@ export default function DashboardSidebar({ role }: { role: USER_ROLE }) {
 
   return (
     <Sidebar
-      collapsible="none"
-      className=" h-[calc(100svh-0rem)] border-r border-sidebar-border"
+      collapsible="icon"
+      className="top-16 h-[calc(100svh-4rem)] border-r border-sidebar-border"
     >
       <SidebarContent>
         <SidebarGroup>
