@@ -14,6 +14,7 @@ import { getCustomerBookingById } from "../../_actions/getCustomerBooking";
 import { IBookingDetails } from "@/lib/types/modules/booking/booking.types";
 import PayNowButton from "../../_components/_my-bookings/PayNowButton";
 import { formatCurrency, formatMinutes } from "./_utils";
+import { PostReviewDialog } from "../../_components/_my-bookings/PostReviewDialog";
 
 // Status config
 const STATUS_CONFIG: Record<
@@ -272,10 +273,10 @@ export default async function BookingDetailsPage({
               />
             )}
           {booking.status === "COMPLETED" && (
-            <button type="button" className="btn-primary">
-              <Star size={16} />
-              Leave a review
-            </button>
+            <PostReviewDialog
+              bookingId={booking.id}
+              serviceName={booking.service.name}
+            />
           )}
         </div>
       </div>
