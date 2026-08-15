@@ -13,7 +13,7 @@ export const getCustomerBookings = async ({
   const { accessToken } = await getAccessToken();
 
   const res = await fetch(
-    `${process.env.BACKEND_API_URL}/api/bookings?sortBy=${sortBy}&sortOrder=${sortOrder}`,
+    `${process.env.BACKEND_API_URL}/api/bookings?sortBy=${sortBy ? sortBy : "createdAt"}&sortOrder=${sortOrder ? sortOrder : "desc"}`,
     {
       method: "GET",
       headers: {

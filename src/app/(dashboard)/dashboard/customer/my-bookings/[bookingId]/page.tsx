@@ -9,12 +9,13 @@ import {
   DollarSign,
   Home,
 } from "lucide-react";
-import { BookingStatus } from "@/lib/types/enum";
+import { BookingStatus, PaymentStatus } from "@/lib/types/enum";
 import { getCustomerBookingById } from "../../_actions/getCustomerBooking";
 import { IBookingDetails } from "@/lib/types/modules/booking/booking.types";
+import PayNowButton from "../../_components/_my-bookings/PayNowButton";
+import { formatCurrency, formatMinutes } from "./_utils";
 
-
-// Status config 
+// Status config
 const STATUS_CONFIG: Record<
   BookingStatus,
   { label: string; className: string }
@@ -22,9 +23,20 @@ const STATUS_CONFIG: Record<
   REQUESTED: { label: "Requested", className: "status-warning" },
   ACCEPTED: { label: "Accepted", className: "status-info" },
   DECLINED: { label: "Declined", className: "status-error" },
-  PAID: { label: "Paid", className: "status-info" },
   IN_PROGRESS: { label: "In progress", className: "status-info" },
   COMPLETED: { label: "Completed", className: "status-success" },
+};
+
+const PAYMENT_STATUS_CONFIG: Record<
+  PaymentStatus,
+  { label: string; className: string }
+> = {
+  PENDING: { label: "Payment pending", className: "status-warning" },
+  PAID: { label: "Paid", className: "status-success" },
+  FAILED: { label: "Payment failed", className: "status-error" },
+  REQUESTED_REFUND: { label: "Refund requested", className: "status-warning" },
+  REFUNDED: { label: "Refunded", className: "status-info" },
+  CANCELLED: { label: "Cancelled", className: "status-error" },
 };
 
 // Helper methods
@@ -40,24 +52,6 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     dateStyle: "medium",
   });
-}
-
-function formatMinutes(mins: number | null) {
-  if (mins === null) return null;
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  if (h === 0) return `${m} min`;
-  if (m === 0) return `${h} hr`;
-  return `${h} hr ${m} min`;
-}
-
-function formatCurrency(amount: number | null) {
-  if (amount === null) return null;
-  return new Intl.NumberFormat("en-BD", {
-    style: "currency",
-    currency: "BDT",
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
 
 function initials(name: string) {
@@ -116,6 +110,7 @@ export default async function BookingDetailsPage({
 }) {
   const { bookingId } = await params;
   const booking: IBookingDetails = await getCustomerBookingById({ bookingId });
+
   const status = STATUS_CONFIG[booking.status];
   const started = formatDateTime(booking.startedAt);
   const completed = formatDateTime(booking.completedAt);
@@ -166,6 +161,46 @@ export default async function BookingDetailsPage({
                 value={price ?? "Pending calculation"}
               />
             </div>
+          </SectionCard>
+
+          {/* Payment */}
+          <SectionCard title="Payment">
+            {booking.payment ? (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-md bg-brand-light text-brand">
+                    <DollarSign size={17} strokeWidth={2} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-muted">Status</p>
+                    <span
+                      className={`fixit-badge mt-1 ${
+                        PAYMENT_STATUS_CONFIG[booking.payment.status].className
+                      }`}
+                      style={{ border: "none" }}
+                    >
+                      {PAYMENT_STATUS_CONFIG[booking.payment.status].label}
+                    </span>
+                  </div>
+                </div>
+                <InfoRow
+                  icon={Wrench}
+                  label="Method"
+                  value={`${booking.payment.provider} · ${booking.payment.method}`}
+                />
+                {booking.payment.paidAt && (
+                  <InfoRow
+                    icon={Calendar}
+                    label="Paid on"
+                    value={formatDateTime(booking.payment.paidAt)}
+                  />
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-secondary">
+                No payment has been initiated for this booking yet.
+              </p>
+            )}
           </SectionCard>
 
           {/* Technician */}
@@ -229,6 +264,13 @@ export default async function BookingDetailsPage({
             <Phone size={16} />
             Contact technician
           </button>
+          {booking.status === "COMPLETED" &&
+            (!booking.payment || booking.payment.status !== "PAID") && (
+              <PayNowButton
+                href={`/dashboard/customer/my-bookings/${bookingId}/pay`}
+                className="btn-primary"
+              />
+            )}
           {booking.status === "COMPLETED" && (
             <button type="button" className="btn-primary">
               <Star size={16} />

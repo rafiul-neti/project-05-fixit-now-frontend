@@ -15,7 +15,6 @@ export const BookingStatus = {
   REQUESTED: "REQUESTED",
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
-  PAID: "PAID",
   IN_PROGRESS: "IN_PROGRESS",
   COMPLETED: "COMPLETED",
 } as const;
@@ -32,8 +31,11 @@ export type WeekendDays = (typeof WeekendDays)[keyof typeof WeekendDays];
 
 export const PaymentStatus = {
   PENDING: "PENDING",
-  SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
+  PAID: "PAID",
+  REQUESTED_REFUND: "REQUESTED_REFUND",
+  REFUNDED: "REFUNDED",
+  CANCELLED: "CANCELLED",
 } as const;
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];

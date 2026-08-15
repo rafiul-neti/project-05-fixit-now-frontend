@@ -1,4 +1,4 @@
-import { BookingStatus } from "../../enum";
+import { BookingStatus, PaymentProvider, PaymentStatus } from "../../enum";
 
 export type Booking = {
   id: string;
@@ -16,6 +16,13 @@ export type Booking = {
   service: { name: string };
   technician: { user: { name: string } };
   address: { city: string; region: string };
+  payment?: {
+    status: PaymentStatus;
+    provider: PaymentProvider;
+    method: string;
+    paidAt: string;
+    amount: number;
+  } | null;
 };
 
 export interface IBookingDetails {
@@ -53,4 +60,11 @@ export interface IBookingDetails {
     region: string;
     whereAbout: string;
   };
+  payment?: {
+    status: PaymentStatus;
+    provider: PaymentProvider;
+    method: string;
+    paidAt: string;
+    amount: number;
+  } | null;
 }
