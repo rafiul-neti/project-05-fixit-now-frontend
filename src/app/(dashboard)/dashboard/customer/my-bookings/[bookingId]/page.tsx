@@ -272,7 +272,7 @@ export default async function BookingDetailsPage({
                 className="btn-primary"
               />
             )}
-          {booking.status === "COMPLETED" && (
+          {booking.payment && booking.payment.status === PaymentStatus.PAID && (
             <PostReviewDialog
               bookingId={booking.id}
               serviceName={booking.service.name}
