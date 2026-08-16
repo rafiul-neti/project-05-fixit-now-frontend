@@ -2,7 +2,7 @@ import React from "react";
 import { Clock, Wrench } from "lucide-react";
 import { getCustomerBookingById } from "../../../_actions/getCustomerBooking";
 import { IBookingDetails } from "@/lib/types/modules/booking/booking.types";
-import { formatCurrency, formatMinutes } from "../_utils";
+import { formatCurrency, formatMinutes } from "../../../_utils";
 import { ConfirmPaymentButton } from "./_components/ConfirmPaymentButton";
 
 function InfoRow({

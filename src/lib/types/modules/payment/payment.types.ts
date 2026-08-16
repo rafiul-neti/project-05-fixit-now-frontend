@@ -19,3 +19,29 @@ export interface CustomerPayment {
     technician: { user: { name: string } };
   };
 }
+
+export interface PaymentDetails {
+  id: string;
+  stripeCheckoutSessionId: string;
+  stripePaymentIntentId: string | null;
+  amount: string; // Decimal serializes as a string over JSON
+  method: string;
+  provider: string;
+  status: PaymentStatus;
+  failureReason: string | null;
+  bookingId: string;
+  userId: string;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  bookingDetails: {
+    serviceName: string;
+    serviceCategory: string;
+    serviceDescription: string;
+    technicianName: string;
+    technicianBio: string;
+    technicianExperienceYears: number;
+    technicianPhoto: string | null;
+    technicianRating: number;
+  };
+}

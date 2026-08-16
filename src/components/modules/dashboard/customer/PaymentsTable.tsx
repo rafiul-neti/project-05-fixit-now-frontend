@@ -4,41 +4,15 @@ import { useMemo, useState } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown, Receipt } from "lucide-react";
 import { PaymentStatus } from "@/lib/types/enum";
 import { CustomerPayment } from "@/lib/types/modules/payment/payment.types";
-
-
-
-// ---------------------------------------------------------------------------
-// Config
-// ---------------------------------------------------------------------------
-
-const PAYMENT_STATUS_CONFIG: Record<
-  PaymentStatus,
-  { label: string; className: string }
-> = {
-  PENDING: { label: "Pending", className: "status-warning" },
-  PAID: { label: "Paid", className: "status-success" },
-  FAILED: { label: "Failed", className: "status-error" },
-  REQUESTED_REFUND: { label: "Refund requested", className: "status-warning" },
-  REFUNDED: { label: "Refunded", className: "status-info" },
-  CANCELLED: { label: "Cancelled", className: "status-error" },
-};
+import {
+  formatNaNCurrency,
+  PAYMENT_STATUS_CONFIG,
+} from "@/app/(dashboard)/dashboard/customer/_utils";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type SortKey = "date" | "amount" | "status";
 type SortDirection = "asc" | "desc";
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function formatCurrency(amount: string) {
-  const value = Number(amount);
-  if (Number.isNaN(value)) return amount;
-  return new Intl.NumberFormat("en-BD", {
-    style: "currency",
-    currency: "BDT",
-    maximumFractionDigits: 2,
-  }).format(value);
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { dateStyle: "medium" });
@@ -87,11 +61,10 @@ function SortButton({
   );
 }
 
-// ---------------------------------------------------------------------------
 // Main component
-// ---------------------------------------------------------------------------
 
 export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
+  const router = useRouter();
   const [sortKey, setSortKey] = useState<SortKey>("date");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
@@ -182,7 +155,18 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
             {sortedPayments.map((payment) => (
               <tr
                 key={payment.id}
-                className="border-b border-border last:border-0 hover:bg-(--background-secondary)"
+                onClick={() =>
+                  router.push(`/dashboard/customer/payments/${payment.id}`)
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    router.push(`/dashboard/customer/payments/${payment.id}`);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                className="cursor-pointer border-b border--border last:border-0 hover:bg-(--background-secondary) focus-visible:bg-(--background-secondary) focus-visible:outline-none"
               >
                 <td className="px-4 py-3 font-medium text-navy">
                   {payment.booking.service.name}
@@ -191,7 +175,7 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
                   {payment.booking.technician.user.name}
                 </td>
                 <td className="px-4 py-3 font-semibold text-navy">
-                  {formatCurrency(payment.amount)}
+                  {formatNaNCurrency(payment.amount)}
                 </td>
                 <td className="px-4 py-3 capitalize text-secondary">
                   {payment.method}
@@ -211,7 +195,11 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
       {/* Mobile: stacked cards */}
       <div className="flex flex-col gap-3 sm:hidden">
         {sortedPayments.map((payment) => (
-          <div key={payment.id} className="fixit-card p-4">
+          <Link
+            key={payment.id}
+            href={`/dashboard/customer/payments/${payment.id}`}
+            className="fixit-card block p-4"
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate font-semibold text-navy">
@@ -229,10 +217,10 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
                 {payment.method} &middot; {formatDate(payment.createdAt)}
               </span>
               <span className="font-semibold text-navy">
-                {formatCurrency(payment.amount)}
+                {formatNaNCurrency(payment.amount)}
               </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </>

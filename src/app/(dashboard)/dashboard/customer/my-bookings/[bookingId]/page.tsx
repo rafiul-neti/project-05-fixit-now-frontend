@@ -13,8 +13,10 @@ import { BookingStatus, PaymentStatus } from "@/lib/types/enum";
 import { getCustomerBookingById } from "../../_actions/getCustomerBooking";
 import { IBookingDetails } from "@/lib/types/modules/booking/booking.types";
 import PayNowButton from "../../_components/_my-bookings/PayNowButton";
-import { formatCurrency, formatMinutes } from "./_utils";
+import { formatCurrency, formatDateTime, formatMinutes, initials, PAYMENT_STATUS_CONFIG } from "../../_utils";
 import { PostReviewDialog } from "../../_components/_my-bookings/PostReviewDialog";
+import { SectionCard } from "../../_components/SectionCard";
+import { InfoRow } from "../../_components/InfoRow";
 
 // Status config
 const STATUS_CONFIG: Record<
@@ -28,78 +30,12 @@ const STATUS_CONFIG: Record<
   COMPLETED: { label: "Completed", className: "status-success" },
 };
 
-const PAYMENT_STATUS_CONFIG: Record<
-  PaymentStatus,
-  { label: string; className: string }
-> = {
-  PENDING: { label: "Payment pending", className: "status-warning" },
-  PAID: { label: "Paid", className: "status-success" },
-  FAILED: { label: "Payment failed", className: "status-error" },
-  REQUESTED_REFUND: { label: "Refund requested", className: "status-warning" },
-  REFUNDED: { label: "Refunded", className: "status-info" },
-  CANCELLED: { label: "Cancelled", className: "status-error" },
-};
-
 // Helper methods
-function formatDateTime(iso: string | null) {
-  if (!iso) return null;
-  return new Date(iso).toLocaleString("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     dateStyle: "medium",
   });
-}
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-// Small building blocks
-function InfoRow({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-md bg-brand-light text-brand">
-        <Icon size={17} strokeWidth={2} />
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs font-medium text-muted">{label}</p>
-        <p className="truncate text-sm font-semibold text-navy">{value}</p>
-      </div>
-    </div>
-  );
-}
-
-function SectionCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="fixit-card p-6">
-      <h2 className="mb-5 text-base font-bold text-navy">{title}</h2>
-      {children}
-    </section>
-  );
 }
 
 // Main component
