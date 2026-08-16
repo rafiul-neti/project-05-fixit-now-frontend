@@ -59,7 +59,5 @@ export async function getCustomerPaymentDetails(paymentId: string) {
     throw new Error(result.message);
   }
 
-  console.dir(result.data, { depth: null });
-
   return result.data;
 }

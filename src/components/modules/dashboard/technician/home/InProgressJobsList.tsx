@@ -1,0 +1,93 @@
+"use client";
+
+import { useState } from "react";
+import { PlayCircle } from "lucide-react";
+import type { TechnicianBooking } from "@/lib/types/modules/technician/technician.types";
+
+function formatStartedAt(iso: string) {
+  return new Date(iso).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+function formatElapsed(startedAt: string) {
+  const ms = Date.now() - new Date(startedAt).getTime();
+  const totalMinutes = Math.max(0, Math.floor(ms / 60000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) return `${minutes}m`;
+  return `${hours}h ${minutes}m`;
+}
+
+function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function handleMarkComplete() {
+    setIsSubmitting(true);
+    // TODO: call mark-booking-complete action once confirmed, then setIsSubmitting(false)
+  }
+
+  return (
+    <div className="fixit-card p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="flex h-2 w-2 flex-none rounded-full bg-(--success)" />
+        <p className="text-sm font-semibold text-navy">In progress</p>
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="font-semibold text-navy">{booking.service.name}</p>
+          {booking.startedAt && (
+            <>
+              <p className="mt-1 flex items-center gap-1.5 text-sm text-secondary">
+                <PlayCircle size={14} />
+                Started {formatStartedAt(booking.startedAt)}
+              </p>
+              <p className="mt-1 text-sm font-medium text-brand">
+                {formatElapsed(booking.startedAt)} elapsed
+              </p>
+            </>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleMarkComplete}
+          disabled={isSubmitting}
+          className="btn-primary flex-none disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Mark as complete
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function InProgressJobsList({
+  inProgressBookings,
+}: {
+  inProgressBookings: TechnicianBooking[];
+}) {
+  return (
+    <section>
+      <h2 className="mb-3 text-base font-bold text-navy">
+        Jobs in progress
+        <span className="ml-2 text-sm font-medium text-muted">
+          ({inProgressBookings.length})
+        </span>
+      </h2>
+      {inProgressBookings.length ? (
+        <div className="flex flex-col gap-3">
+          {inProgressBookings.map((booking) => (
+            <InProgressJobRow key={booking.id} booking={booking} />
+          ))}
+        </div>
+      ) : (
+        <div className="fixit-card p-6 text-center text-sm text-secondary">
+          Currently no job is in progress.
+        </div>
+      )}
+    </section>
+  );
+}
