@@ -4,7 +4,6 @@ import {
   ClipboardList,
   CreditCard,
   BriefcaseBusiness,
-  Clock3,
   CalendarCheck,
   Users,
   Tags,
@@ -53,11 +52,6 @@ const TECHNICIAN_SIDEBAR_ITEMS: SidebarItems[] = [
     label: "My Services",
     href: "/dashboard/technician/my-services",
     icon: BriefcaseBusiness,
-  },
-  {
-    label: "Availability",
-    href: "/dashboard/technician/set-availability",
-    icon: Clock3,
   },
   {
     label: "Bookings",

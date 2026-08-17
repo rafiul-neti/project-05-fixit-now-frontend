@@ -234,12 +234,6 @@ function ServiceRow({
   );
 }
 
-// ---------------------------------------------------------------------------
-// List — owns the shared services array, same pattern as
-// TechnicianDashboardSections: local state seeded from the server prop,
-// updated in place so toggling/editing reflects instantly without a reload.
-// ---------------------------------------------------------------------------
-
 export function TechnicianServicesList({
   initialServices,
 }: {
