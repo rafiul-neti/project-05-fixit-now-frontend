@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Clock } from "lucide-react";
 import type { TechnicianBooking } from "@/lib/types/modules/technician/technician.types";
 import { BookingStatus } from "@/lib/types/enum";
 import { formatDateTime } from "@/app/(dashboard)/dashboard/customer/_utils";
-import { handleBookingStatus } from "@/actions/modules/dashboard/technician/handleBookingStatus";
-import { toast } from "@/components/ui/toast";
-import { Spinner } from "@/components/ui/spinner";
+import { useBookingStatusAction } from "@/hooks/useBookingStatusAction";
+import { DeclineBookingButton } from "../DeclineBookingButton";
+import { AcceptBookingButton } from "../AcceptBookingButton";
 
 export function getButtonState(status: BookingStatus) {
   switch (status) {
@@ -30,68 +29,11 @@ function BookingRequestCard({
   onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
   const { acceptDisabled, declineDisabled } = getButtonState(booking.status);
-  const [isAcceptSubmitting, setIsAcceptSubmitting] = useState(false);
-  const [isDeclineSubmitting, setIsDeclineSubmitting] = useState(false);
-  const [bookingStatusError, setBookingStatusError] = useState<string | null>(
-    null,
-  );
-
-  async function handleAccept(
-    acceptStatus: { status: "ACCEPTED" },
-    bookingId: string,
-  ) {
-    setIsAcceptSubmitting(true);
-    setBookingStatusError(null);
-    try {
-      await handleBookingStatus(acceptStatus, bookingId);
-
-      toast.add({
-        type: "success",
-        description: `Booking '${acceptStatus.status}'.`,
-      });
-
-      setIsAcceptSubmitting(false);
-
-      onStatusChange(bookingId, acceptStatus.status);
-    } catch (error) {
-      setIsAcceptSubmitting(false);
-      setBookingStatusError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again.",
-      );
-    }
-  }
-
-  async function handleDecline(
-    declineStatus: { status: "DECLINED" },
-    bookingId: string,
-  ) {
-    setIsDeclineSubmitting(true);
-    setBookingStatusError(null);
-    try {
-      await handleBookingStatus(declineStatus, bookingId);
-
-      toast.add({
-        type: "success",
-        description: `Booking '${declineStatus.status}'.`,
-      });
-
-      setIsDeclineSubmitting(false);
-
-      onStatusChange(bookingId, declineStatus.status);
-    } catch (error) {
-      setIsDeclineSubmitting(false);
-      setBookingStatusError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again.",
-      );
-    }
-  }
+  const { accept, decline, isAccepting, isDeclining, isBusy, error } =
+    useBookingStatusAction(booking.id, onStatusChange);
 
   return (
-    <div className={`fixit-card`}>
+    <div className="fixit-card">
       <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="font-semibold text-navy">{booking.service.name}</p>
@@ -102,33 +44,23 @@ function BookingRequestCard({
         </div>
 
         <div className="flex flex-none gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              handleDecline({ status: BookingStatus.DECLINED }, booking.id)
-            }
-            disabled={declineDisabled || isDeclineSubmitting}
-            className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isDeclineSubmitting ? <Spinner /> : "Decline"}
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              handleAccept({ status: BookingStatus.ACCEPTED }, booking.id)
-            }
-            disabled={acceptDisabled || isAcceptSubmitting}
-            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isAcceptSubmitting ? <Spinner /> : "Accept"}
-          </button>
+          <DeclineBookingButton
+            onClick={decline}
+            disabled={declineDisabled || isBusy}
+            isLoading={isDeclining}
+          />
+          <AcceptBookingButton
+            onClick={accept}
+            disabled={acceptDisabled || isBusy}
+            isLoading={isAccepting}
+          />
         </div>
       </div>
 
-      {bookingStatusError && (
-        <div className="flex items-center justify-between text-center">
+      {error && (
+        <div className="flex items-center justify-between px-5 pb-5 text-center">
           <p className="rounded-md bg-(--error-light) px-3 py-2 text-sm text-(--error)">
-            {bookingStatusError}
+            {error}
           </p>
         </div>
       )}

@@ -70,3 +70,36 @@ export interface TechnicianServiceItem {
     category: { name: string };
   };
 }
+
+// ! types for technician's view-incoming-bookings
+export interface IncomingBooking {
+  id: string;
+  userId: string;
+  serviceId: string;
+  technicianId: string;
+  addressId: string;
+  startedAt: string | null;
+  completedAt: string | null;
+  workedMinutes: number | null;
+  totalPrice: string | null;
+  status: "REQUESTED";
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    name: string;
+    phone: string;
+    email: string;
+  };
+  address: {
+    address_line_1: string;
+    address_line_2: string | null;
+    postCode: string;
+    city: string;
+    region: string;
+  };
+  service: {
+    name: string;
+    description: string;
+    category: { name: string };
+  };
+}
