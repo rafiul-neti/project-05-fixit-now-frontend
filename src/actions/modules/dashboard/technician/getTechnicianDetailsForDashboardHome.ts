@@ -2,15 +2,13 @@ import { getAccessToken } from "@/service/getAccessToken";
 import { getMe } from "@/service/getMe";
 import { idValidationSchema } from "@/validation";
 
-async function getTechnicianDetailsForDashboardHome(
-  technicianId: string,
-) {
+async function getTechnicianDetailsForDashboardHome(technicianId: string) {
   const { success, accessToken, message } = await getAccessToken();
   if (!success) throw new Error(message);
 
   const parsed = idValidationSchema.safeParse({ id: technicianId });
   if (!parsed.success) {
-    throw new Error("Invalid payment reference.");
+    throw new Error("Invalid technician reference.");
   }
 
   const { id } = parsed.data;
@@ -22,6 +20,11 @@ async function getTechnicianDetailsForDashboardHome(
       headers: {
         "Content-Type": "application/json",
         Cookie: `accessToken=${accessToken}`,
+      },
+      cache: "force-cache",
+      next: {
+        tags: ["technician-dashboard"],
+        revalidate: 60 * 60 * 2, // 2 hours
       },
     },
   );

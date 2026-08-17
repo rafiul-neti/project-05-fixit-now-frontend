@@ -45,7 +45,6 @@ export default async function TechnicianDashboardHomePage() {
         <RequestsQueue requestedBookings={requestedBookings} />
 
         {/* 5. In-progress job card */}
-
         <InProgressJobsList inProgressBookings={inProgressBookings} />
 
         {/* 6. Upcoming bookings*/}
