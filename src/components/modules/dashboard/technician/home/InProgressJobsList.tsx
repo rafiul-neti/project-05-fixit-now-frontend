@@ -6,6 +6,7 @@ import type { TechnicianBooking } from "@/lib/types/modules/technician/technicia
 import { BookingStatus } from "@/lib/types/enum";
 import { handleBookingStatus } from "@/actions/modules/dashboard/technician/handleBookingStatus";
 import { toast } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
 
 function formatStartedAt(iso: string) {
   return new Date(iso).toLocaleString("en-US", {
@@ -28,7 +29,7 @@ function InProgressJobRow({
   onStatusChange,
 }: {
   booking: TechnicianBooking;
-  onStatusChange: (bookingId: string) => void;
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +49,7 @@ function InProgressJobRow({
 
       setIsSubmitting(false);
 
-      onStatusChange(id);
+      onStatusChange(id, statusCompleted.status);
     } catch (error) {
       setError(
         error instanceof Error
@@ -89,7 +90,7 @@ function InProgressJobRow({
           disabled={isSubmitting}
           className="btn-primary flex-none disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Mark as complete
+          {isSubmitting ? <Spinner /> : "Mark as complete"}
         </button>
       </div>
 
@@ -106,32 +107,28 @@ function InProgressJobRow({
 
 export function InProgressJobsList({
   inProgressBookings,
+  onStatusChange,
 }: {
   inProgressBookings: TechnicianBooking[];
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
-  const [bookings, setBookings] = useState(inProgressBookings);
-
-  function handleStatusChange(bookingId: string) {
-    setBookings((current) => current.filter((b) => b.id !== bookingId));
-  }
-
-  if (bookings.length === 0) return null;
+  if (inProgressBookings.length === 0) return null;
 
   return (
     <section>
       <h2 className="mb-3 text-base font-bold text-navy">
         Jobs in progress
         <span className="ml-2 text-sm font-medium text-muted">
-          ({bookings.length})
+          ({inProgressBookings.length})
         </span>
       </h2>
-      {bookings.length ? (
+      {inProgressBookings.length ? (
         <div className="flex flex-col gap-3">
-          {bookings.map((booking) => (
+          {inProgressBookings.map((booking) => (
             <InProgressJobRow
               key={booking.id}
               booking={booking}
-              onStatusChange={handleStatusChange}
+              onStatusChange={onStatusChange}
             />
           ))}
         </div>

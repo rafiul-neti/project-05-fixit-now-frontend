@@ -55,3 +55,18 @@ export interface TechnicianDashboardResponse {
   message: string;
   data: TechnicianDashboardData;
 }
+
+// ! types for technician's my-services pages
+export interface TechnicianServiceItem {
+  id: string;
+  technicianId: string;
+  serviceId: string;
+  isActive: boolean;
+  priceOverride: string | null;
+  estimatedDuration: number | null;
+  service: {
+    name: string;
+    description: string;
+    category: { name: string };
+  };
+}

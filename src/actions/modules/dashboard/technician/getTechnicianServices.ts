@@ -1,8 +1,10 @@
+"use server";
+
 import { getAccessToken } from "@/service/getAccessToken";
 import { idValidationSchema } from "@/validation";
 import { callApiThroughTechnicianId } from "./callApiThroughTechnicianId";
 
-async function getTechnicianDetailsForDashboardHome(technicianId: string) {
+async function technicianServices(technicianId: string) {
   const { success, accessToken, message } = await getAccessToken();
   if (!success) throw new Error(message);
 
@@ -14,7 +16,7 @@ async function getTechnicianDetailsForDashboardHome(technicianId: string) {
   const { id } = parsed.data;
 
   const res = await fetch(
-    `${process.env.BACKEND_API_URL}/api/technicians/${id}/dashboard`,
+    `${process.env.BACKEND_API_URL}/api/technicians/${id}/services`,
     {
       method: "GET",
       headers: {
@@ -23,7 +25,7 @@ async function getTechnicianDetailsForDashboardHome(technicianId: string) {
       },
       cache: "force-cache",
       next: {
-        tags: ["technician-dashboard"],
+        tags: ["technician-services"],
         revalidate: 60 * 60 * 2, // 2 hours
       },
     },
@@ -38,10 +40,7 @@ async function getTechnicianDetailsForDashboardHome(technicianId: string) {
   return result.data;
 }
 
-export async function returnTechnicianDashboardHomepageData() {
-  const technicianDashboardHomeData = await callApiThroughTechnicianId(
-    getTechnicianDetailsForDashboardHome,
-  );
-
-  return technicianDashboardHomeData;
-}
+export const getTechnicianServices = async () => {
+  const services = await callApiThroughTechnicianId(technicianServices);
+  return services;
+};

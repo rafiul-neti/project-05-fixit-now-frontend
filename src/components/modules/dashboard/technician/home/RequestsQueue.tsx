@@ -27,7 +27,7 @@ function BookingRequestCard({
   onStatusChange,
 }: {
   booking: TechnicianBooking;
-  onStatusChange: (bookingId: string) => void;
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
   const { acceptDisabled, declineDisabled } = getButtonState(booking.status);
   const [isAcceptSubmitting, setIsAcceptSubmitting] = useState(false);
@@ -49,8 +49,10 @@ function BookingRequestCard({
         type: "success",
         description: `Booking '${acceptStatus.status}'.`,
       });
+
       setIsAcceptSubmitting(false);
-      onStatusChange(booking.id);
+
+      onStatusChange(bookingId, acceptStatus.status);
     } catch (error) {
       setIsAcceptSubmitting(false);
       setBookingStatusError(
@@ -74,8 +76,10 @@ function BookingRequestCard({
         type: "success",
         description: `Booking '${declineStatus.status}'.`,
       });
+
       setIsDeclineSubmitting(false);
-      onStatusChange(booking.id);
+
+      onStatusChange(bookingId, declineStatus.status);
     } catch (error) {
       setIsDeclineSubmitting(false);
       setBookingStatusError(
@@ -134,40 +138,30 @@ function BookingRequestCard({
 
 export function RequestsQueue({
   requestedBookings,
+  onStatusChange,
 }: {
   requestedBookings: TechnicianBooking[];
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
-  const [bookings, setBookings] = useState(requestedBookings);
-
-  function handleStatusChange(bookingId: string) {
-    setBookings((current) => current.filter((b) => b.id !== bookingId));
-  }
-
-  if (bookings.length === 0) return null;
+  if (requestedBookings.length === 0) return null;
 
   return (
     <section>
       <h2 className="mb-3 text-base font-bold text-navy">
         New requests
         <span className="ml-2 text-sm font-medium text-muted">
-          ({bookings.length})
+          ({requestedBookings.length})
         </span>
       </h2>
-      {requestedBookings.length ? (
-        <div className="flex flex-col gap-3">
-          {bookings.map((booking) => (
-            <BookingRequestCard
-              key={booking.id}
-              booking={booking}
-              onStatusChange={handleStatusChange}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="fixit-card p-6 text-center text-sm text-secondary">
-          No new request.
-        </div>
-      )}
+      <div className="flex flex-col gap-3">
+        {requestedBookings.map((booking) => (
+          <BookingRequestCard
+            key={booking.id}
+            booking={booking}
+            onStatusChange={onStatusChange}
+          />
+        ))}
+      </div>
     </section>
   );
 }

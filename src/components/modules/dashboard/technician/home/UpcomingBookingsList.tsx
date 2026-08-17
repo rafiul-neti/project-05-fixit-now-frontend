@@ -21,7 +21,7 @@ function UpcomingBookingRow({
   onStatusChange,
 }: {
   booking: TechnicianBooking;
-  onStatusChange: (bookingId: string) => void;
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +42,7 @@ function UpcomingBookingRow({
 
       setIsSubmitting(false);
 
-      onStatusChange(bookingId);
+      onStatusChange(bookingId, inProgressStatus.status);
     } catch (error) {
       setError(
         error instanceof Error
@@ -87,39 +87,35 @@ function UpcomingBookingRow({
 
 export function UpcomingBookingsList({
   upcomingBookings,
+  onStatusChange,
 }: {
   upcomingBookings: TechnicianBooking[];
+  onStatusChange: (bookingId: string, newStatus: BookingStatus) => void;
 }) {
-  const [bookings, setBookings] = useState(upcomingBookings);
-
-  function handleStatusChange(bookingId: string) {
-    setBookings((current) => current.filter((b) => b.id !== bookingId));
-  }
-
-  if (bookings.length === 0) return null;
+  if (upcomingBookings.length === 0) return null;
 
   return (
     <section>
       <h2 className="mb-3 text-base font-bold text-navy">
         Upcoming bookings
-        {bookings.length > 0 && (
+        {upcomingBookings.length > 0 && (
           <span className="ml-2 text-sm font-medium text-muted">
             ({upcomingBookings.length})
           </span>
         )}
       </h2>
 
-      {bookings.length === 0 ? (
+      {upcomingBookings.length === 0 ? (
         <div className="fixit-card p-6 text-center text-sm text-secondary">
           No upcoming bookings right now.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {bookings.map((booking) => (
+          {upcomingBookings.map((booking) => (
             <UpcomingBookingRow
               key={booking.id}
               booking={booking}
-              onStatusChange={handleStatusChange}
+              onStatusChange={onStatusChange}
             />
           ))}
         </div>

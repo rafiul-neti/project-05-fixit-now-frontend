@@ -1,25 +1,17 @@
 import { returnTechnicianDashboardHomepageData } from "@/actions/modules/dashboard/technician/getTechnicianDetailsForDashboardHome";
 import {
   computeTechnicianStats,
-  getInProgressBookings,
   getRecentActivity,
-  getRequestedBookings,
-  getUpcomingBookings,
 } from "@/selector/technician.selector";
 import { ProfileCard } from "@/components/modules/dashboard/technician/home/ProfileCard";
 import { AvailabilityCard } from "@/components/modules/dashboard/technician/home/AvailabilityCard";
 import { StatsRow } from "@/components/modules/dashboard/technician/home/StatsRow";
-import { RequestsQueue } from "@/components/modules/dashboard/technician/home/RequestsQueue";
-import { InProgressJobsList} from "@/components/modules/dashboard/technician/home/InProgressJobsList";
-import { UpcomingBookingsList } from "@/components/modules/dashboard/technician/home/UpcomingBookingsList";
 import { RecentActivityList } from "@/components/modules/dashboard/technician/home/RecentActivityList";
+import TechnicianDashboardSections from "@/components/modules/dashboard/technician/home/TechnicianDashboardSections";
 
 export default async function TechnicianDashboardHomePage() {
   const data = await returnTechnicianDashboardHomepageData();
 
-  const requestedBookings = getRequestedBookings(data.bookings);
-  const inProgressBookings = getInProgressBookings(data.bookings);
-  const upcomingBookings = getUpcomingBookings(data.bookings);
   const recentActivity = getRecentActivity(data.bookings);
   const stats = computeTechnicianStats(data);
 
@@ -41,16 +33,10 @@ export default async function TechnicianDashboardHomePage() {
           <StatsRow stats={stats} />
         </section>
 
-        {/* 4. Requests queue*/}
-        <RequestsQueue requestedBookings={requestedBookings} />
+        {/* 4. Dashboard sections: In progress bookings, requested bookings, and upcoming bookings*/}
+        <TechnicianDashboardSections initialBookings={data.bookings} />
 
-        {/* 5. In-progress job card */}
-        <InProgressJobsList inProgressBookings={inProgressBookings} />
-
-        {/* 6. Upcoming bookings*/}
-        <UpcomingBookingsList upcomingBookings={upcomingBookings} />
-
-        {/* 7. Recent activity */}
+        {/* 5. Recent activity */}
         <RecentActivityList recentActivity={recentActivity} />
       </div>
     </div>
