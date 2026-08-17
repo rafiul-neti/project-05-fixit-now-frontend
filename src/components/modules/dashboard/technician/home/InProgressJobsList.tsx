@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { PlayCircle } from "lucide-react";
 import type { TechnicianBooking } from "@/lib/types/modules/technician/technician.types";
+import { BookingStatus } from "@/lib/types/enum";
+import { handleBookingStatus } from "@/actions/modules/dashboard/technician/handleBookingStatus";
+import { toast } from "@/components/ui/toast";
 
 function formatStartedAt(iso: string) {
   return new Date(iso).toLocaleString("en-US", {
@@ -22,10 +25,28 @@ function formatElapsed(startedAt: string) {
 
 function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleMarkComplete() {
+  async function handleMarkComplete(
+    statusCompleted: { status: "COMPLETED" },
+    id: string,
+  ) {
     setIsSubmitting(true);
-    // TODO: call mark-booking-complete action once confirmed, then setIsSubmitting(false)
+    setError(null);
+    try {
+      await handleBookingStatus(statusCompleted, id);
+      toast.add({
+        type: "success",
+        description: `Booking '${statusCompleted.status}`,
+      });
+      setIsSubmitting(false);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again!",
+      );
+    }
   }
 
   return (
@@ -53,7 +74,9 @@ function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
 
         <button
           type="button"
-          onClick={handleMarkComplete}
+          onClick={() =>
+            handleMarkComplete({ status: BookingStatus.COMPLETED }, booking.id)
+          }
           disabled={isSubmitting}
           className="btn-primary flex-none disabled:cursor-not-allowed disabled:opacity-50"
         >

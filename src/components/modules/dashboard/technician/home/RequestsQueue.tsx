@@ -9,7 +9,7 @@ import { handleBookingStatus } from "@/actions/modules/dashboard/technician/hand
 import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 
-function getButtonState(status: BookingStatus) {
+export function getButtonState(status: BookingStatus) {
   switch (status) {
     case "REQUESTED":
       return { acceptDisabled: false, declineDisabled: false };
@@ -36,11 +36,14 @@ function BookingRequestCard({
     null,
   );
 
-  async function handleAccept(acceptStatus: { status: "ACCEPTED" }) {
+  async function handleAccept(
+    acceptStatus: { status: "ACCEPTED" },
+    bookingId: string,
+  ) {
     setIsAcceptSubmitting(true);
     setBookingStatusError(null);
     try {
-      await handleBookingStatus(acceptStatus, booking.id);
+      await handleBookingStatus(acceptStatus, bookingId);
 
       toast.add({
         type: "success",
@@ -58,11 +61,14 @@ function BookingRequestCard({
     }
   }
 
-  async function handleDecline(declineStatus: { status: "DECLINED" }) {
+  async function handleDecline(
+    declineStatus: { status: "DECLINED" },
+    bookingId: string,
+  ) {
     setIsDeclineSubmitting(true);
     setBookingStatusError(null);
     try {
-      await handleBookingStatus(declineStatus, booking.id);
+      await handleBookingStatus(declineStatus, bookingId);
 
       toast.add({
         type: "success",
@@ -94,7 +100,9 @@ function BookingRequestCard({
         <div className="flex flex-none gap-2">
           <button
             type="button"
-            onClick={() => handleDecline({ status: BookingStatus.DECLINED })}
+            onClick={() =>
+              handleDecline({ status: BookingStatus.DECLINED }, booking.id)
+            }
             disabled={declineDisabled || isDeclineSubmitting}
             className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -102,7 +110,9 @@ function BookingRequestCard({
           </button>
           <button
             type="button"
-            onClick={() => handleAccept({ status: BookingStatus.ACCEPTED })}
+            onClick={() =>
+              handleAccept({ status: BookingStatus.ACCEPTED }, booking.id)
+            }
             disabled={acceptDisabled || isAcceptSubmitting}
             className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
