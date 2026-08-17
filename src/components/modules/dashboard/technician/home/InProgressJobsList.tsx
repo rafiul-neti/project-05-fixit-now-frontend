@@ -23,7 +23,13 @@ function formatElapsed(startedAt: string) {
   return `${hours}h ${minutes}m`;
 }
 
-function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
+function InProgressJobRow({
+  booking,
+  onStatusChange,
+}: {
+  booking: TechnicianBooking;
+  onStatusChange: (bookingId: string) => void;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +45,10 @@ function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
         type: "success",
         description: `Booking '${statusCompleted.status}`,
       });
+
       setIsSubmitting(false);
+
+      onStatusChange(id);
     } catch (error) {
       setError(
         error instanceof Error
@@ -83,6 +92,14 @@ function InProgressJobRow({ booking }: { booking: TechnicianBooking }) {
           Mark as complete
         </button>
       </div>
+
+      {error && (
+        <div className="flex items-center justify-between text-center">
+          <p className="rounded-md bg-(--error-light) px-3 py-2 text-sm text-(--error)">
+            {error}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -92,18 +109,30 @@ export function InProgressJobsList({
 }: {
   inProgressBookings: TechnicianBooking[];
 }) {
+  const [bookings, setBookings] = useState(inProgressBookings);
+
+  function handleStatusChange(bookingId: string) {
+    setBookings((current) => current.filter((b) => b.id !== bookingId));
+  }
+
+  if (bookings.length === 0) return null;
+
   return (
     <section>
       <h2 className="mb-3 text-base font-bold text-navy">
         Jobs in progress
         <span className="ml-2 text-sm font-medium text-muted">
-          ({inProgressBookings.length})
+          ({bookings.length})
         </span>
       </h2>
-      {inProgressBookings.length ? (
+      {bookings.length ? (
         <div className="flex flex-col gap-3">
-          {inProgressBookings.map((booking) => (
-            <InProgressJobRow key={booking.id} booking={booking} />
+          {bookings.map((booking) => (
+            <InProgressJobRow
+              key={booking.id}
+              booking={booking}
+              onStatusChange={handleStatusChange}
+            />
           ))}
         </div>
       ) : (
