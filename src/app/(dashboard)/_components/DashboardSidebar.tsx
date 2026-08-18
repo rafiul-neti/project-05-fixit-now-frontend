@@ -41,6 +41,7 @@ export default function DashboardSidebar({ role }: { role: USER_ROLE }) {
                   <SidebarMenuButton
                     isActive={pathname === item.href}
                     render={<Link href={item.href} />}
+                    tooltip={item.label}
                   >
                     <item.icon />
                     <span>{item.label}</span>
