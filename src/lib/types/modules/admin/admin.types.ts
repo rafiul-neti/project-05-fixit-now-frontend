@@ -112,3 +112,18 @@ export interface IBooking {
   technician: BookingTechnician;
   user: BookingCustomer;
 }
+
+// types for manage-categories page
+export interface ICategoryService {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  services: ICategoryService[];
+}

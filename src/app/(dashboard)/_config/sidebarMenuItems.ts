@@ -73,12 +73,12 @@ const ADMIN_SIDEBAR_ITEMS: SidebarItems[] = [
   },
   {
     label: "Manage Bookings",
-    href: "/dashboard/admin/all-bookings",
+    href: "/dashboard/admin/manage-bookings",
     icon: ClipboardList,
   },
   {
     label: "Categories",
-    href: "/dashboard/admin/all-categories",
+    href: "/dashboard/admin/manage-categories",
     icon: Tags,
   },
 ];
