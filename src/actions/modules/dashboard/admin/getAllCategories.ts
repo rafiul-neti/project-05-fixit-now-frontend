@@ -22,8 +22,6 @@ export async function getAllCategories() {
 
   const result = await res.json();
 
-  console.dir(result, { depth: null });
-
   if (!result.success) throw new Error(result.message);
 
   return result.data;

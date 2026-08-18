@@ -1,8 +1,8 @@
 "use server";
 
-export const getServices = async () => {
+export const getServices = async (limit?: number) => {
   const res = await fetch(
-    `${process.env.BACKEND_API_URL}/api/services?limit=10`,
+    `${process.env.BACKEND_API_URL}/api/services?limit=${limit ? limit : 10}`,
     {
       cache: "force-cache",
       next: {
@@ -13,6 +13,8 @@ export const getServices = async () => {
   );
 
   const result = await res.json();
+
+  console.dir(result, { depth: null });
 
   return result.data;
 };
