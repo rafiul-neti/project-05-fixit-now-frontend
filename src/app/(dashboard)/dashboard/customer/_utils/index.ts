@@ -47,12 +47,12 @@ export function formatDateTime(iso: string | null) {
   });
 }
 
-export function formatNaNCurrency(amount: string) {
+export function formatNaNCurrency(amount: string, maxDigits?: number) {
   const value = Number(amount);
   if (Number.isNaN(value)) return amount;
   return new Intl.NumberFormat("en-BD", {
     style: "currency",
     currency: "BDT",
-    maximumFractionDigits: 2,
+    maximumFractionDigits: maxDigits ? maxDigits : 0,
   }).format(value);
 }

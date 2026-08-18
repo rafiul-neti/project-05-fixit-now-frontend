@@ -175,7 +175,7 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
                   {payment.booking.technician.user.name}
                 </td>
                 <td className="px-4 py-3 font-semibold text-navy">
-                  {formatNaNCurrency(payment.amount)}
+                  {formatNaNCurrency(payment.amount, 2)}
                 </td>
                 <td className="px-4 py-3 capitalize text-secondary">
                   {payment.method}
@@ -217,7 +217,7 @@ export function PaymentsTable({ payments }: { payments: CustomerPayment[] }) {
                 {payment.method} &middot; {formatDate(payment.createdAt)}
               </span>
               <span className="font-semibold text-navy">
-                {formatNaNCurrency(payment.amount)}
+                {formatNaNCurrency(payment.amount, 2)}
               </span>
             </div>
           </Link>

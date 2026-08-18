@@ -65,7 +65,7 @@ export default async function CustomerPaymentDetailsPage({
               <InfoRow
                 icon={Receipt}
                 label="Amount"
-                value={formatNaNCurrency(payment.amount)}
+                value={formatNaNCurrency(payment.amount, 2)}
               />
               <InfoRow
                 icon={CreditCard}
