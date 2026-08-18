@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { TechniciansSectionProps } from "../_types";
+import Link from "next/link";
 
 export default function Technicians({
   technicians,
@@ -80,16 +81,25 @@ export default function Technicians({
                   </p>
 
                   {/* Rating */}
-                  <div className="mt-3 flex items-center gap-1.5">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
 
-                    <span className="text-sm font-semibold">
-                      {averageRating.toFixed(1)}
-                    </span>
+                      <span className="text-sm font-semibold">
+                        {averageRating.toFixed(1)}
+                      </span>
 
-                    <span className="text-muted text-xs">
-                      ({technician._count.reviews} reviews)
-                    </span>
+                      <span className="text-muted text-xs">
+                        ({technician._count.reviews} reviews)
+                      </span>
+                    </div>
+
+                    <Link
+                      className={`flex items-center text-white px-2 py-1 rounded bg-(--success)`}
+                      href={`/technicians/${technician.id}`}
+                    >
+                      View details
+                    </Link>
                   </div>
                 </div>
               </div>

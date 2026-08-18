@@ -5,7 +5,5 @@ export async function getTechniciansByService(serviceId: string) {
 
   const result = await res.json();
 
-  console.dir(result, { depth: null });
-
   return result.data
 }

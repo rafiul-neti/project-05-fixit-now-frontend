@@ -14,6 +14,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import type { TechnicianAvailability } from "@/lib/types/modules/technician/technician.types";
+import { formatTechnicianAvailabilityTime } from "@/utils/formattedDate";
 
 const WEEKEND_DAY_LABEL: Record<TechnicianAvailability["weekendDays"], string> =
   {
@@ -27,15 +28,6 @@ const WEEKEND_DAY_OPTIONS: TechnicianAvailability["weekendDays"][] = [
   "SAT",
   "SUN",
 ];
-
-function formatTime(time: string) {
-  // "09:00" -> "9:00 AM"
-  const [hourStr, minute] = time.split(":");
-  const hour = Number(hourStr);
-  const period = hour >= 12 ? "PM" : "AM";
-  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-  return `${hour12}:${minute} ${period}`;
-}
 
 function EditAvailabilityDialog({
   availability,
@@ -194,8 +186,8 @@ export function UpdateAvailabilitySlots({
           <div>
             <p className="text-xs font-medium text-muted">Working hours</p>
             <p className="text-sm font-semibold text-navy">
-              {formatTime(availability.startTime)} –{" "}
-              {formatTime(availability.endTime)}
+              {formatTechnicianAvailabilityTime(availability.startTime)} –{" "}
+              {formatTechnicianAvailabilityTime(availability.endTime)}
             </p>
           </div>
         </div>
