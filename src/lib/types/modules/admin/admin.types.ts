@@ -1,4 +1,5 @@
-import { BookingStatus } from "../../enum";
+import { APIResponse } from "..";
+import { BookingStatus, USER_ROLE, UserStatus } from "../../enum";
 
 export interface AdminDashboardStats {
   totalUsers: number;
@@ -29,9 +30,20 @@ export interface AdminDashboardData {
   recentBookings: AdminRecentBooking[];
 }
 
-export interface AdminDashboardResponse {
-  success: boolean;
-  statusCode: number;
-  message: string;
+export interface AdminDashboardResponse extends APIResponse {
   data: AdminDashboardData;
+}
+
+export interface ManagedUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  role: USER_ROLE;
+  status: UserStatus;
+  createdAt: string;
+}
+
+export interface GetAllUsersResponse extends APIResponse {
+  users: ManagedUser[];
 }
