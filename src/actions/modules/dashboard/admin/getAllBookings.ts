@@ -1,11 +1,10 @@
-import { GetAllUsersResponse } from "@/lib/types/modules/admin/admin.types";
 import { getAccessToken } from "@/service/getAccessToken";
 
-export async function getAllUsers() {
+export async function getAllBookings() {
   const { success, accessToken, message } = await getAccessToken();
   if (!success) throw new Error(message);
 
-  const res = await fetch(`${process.env.BACKEND_API_URL}/api/admin/users`, {
+  const res = await fetch(`${process.env.BACKEND_API_URL}/api/admin/bookings`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -13,12 +12,14 @@ export async function getAllUsers() {
     },
     cache: "force-cache",
     next: {
-      tags: ["manage-get-users"],
+      tags: ["manage-bookings"],
       revalidate: 60 * 60 * 2, // 2 hours
     },
   });
 
-  const result: GetAllUsersResponse = await res.json();
+  const result = await res.json();
+
+  console.dir(result, { depth: null });
 
   if (!result.success) throw new Error(result.message);
 

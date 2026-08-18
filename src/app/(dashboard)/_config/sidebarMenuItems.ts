@@ -72,7 +72,7 @@ const ADMIN_SIDEBAR_ITEMS: SidebarItems[] = [
     icon: Users,
   },
   {
-    label: "Bookings",
+    label: "Manage Bookings",
     href: "/dashboard/admin/all-bookings",
     icon: ClipboardList,
   },

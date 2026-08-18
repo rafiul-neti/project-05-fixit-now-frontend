@@ -1,6 +1,12 @@
 import { APIResponse } from "..";
-import { BookingStatus, USER_ROLE, UserStatus } from "../../enum";
+import {
+  BookingStatus,
+  PaymentStatus,
+  USER_ROLE,
+  UserStatus,
+} from "../../enum";
 
+// home page
 export interface AdminDashboardStats {
   totalUsers: number;
   totalBookings: number;
@@ -34,6 +40,8 @@ export interface AdminDashboardResponse extends APIResponse {
   data: AdminDashboardData;
 }
 
+
+// manage user page
 export interface ManagedUser {
   id: string;
   name: string;
@@ -45,5 +53,62 @@ export interface ManagedUser {
 }
 
 export interface GetAllUsersResponse extends APIResponse {
-  users: ManagedUser[];
+  data: ManagedUser[];
+}
+
+
+// manage bookings page types
+export type BookingStatusType =
+  (typeof BookingStatus)[keyof typeof BookingStatus];
+
+export interface BookingAddress {
+  address_line_1: string;
+  address_line_2: string | null;
+  city: string;
+  postCode: string;
+  region: string;
+}
+
+export interface BookingServiceCategory {
+  name: string;
+}
+
+export interface BookingService {
+  name: string;
+  category: BookingServiceCategory;
+  description: string;
+}
+
+export interface BookingTechnician {
+  user: {
+    name: string;
+  };
+}
+
+export interface BookingCustomer {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export type BookingPayment = PaymentStatus;
+
+export interface IBooking {
+  id: string;
+  userId: string;
+  serviceId: string;
+  technicianId: string;
+  addressId: string;
+  startedAt: string | null;
+  completedAt: string | null;
+  workedMinutes: number | null;
+  totalPrice: string;
+  status: BookingStatusType;
+  createdAt: string;
+  updatedAt: string;
+  address: BookingAddress;
+  payment: BookingPayment;
+  service: BookingService;
+  technician: BookingTechnician;
+  user: BookingCustomer;
 }
