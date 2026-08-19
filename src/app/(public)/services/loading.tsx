@@ -16,32 +16,56 @@ function ServiceCardSkeleton() {
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-(--background-secondary) py-10">
-      <div className="fixit-container">
-        {/* Header */}
-        <div className="mb-8">
-          <Skeleton className="h-7 w-40" />
-          <Skeleton className="mt-2 h-4 w-72" />
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_1fr]">
-          {/* Category sidebar */}
-          <aside>
-            <Skeleton className="mb-2 h-3 w-20" />
-            <div className="flex gap-2 overflow-hidden lg:flex-col">
-              <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
-              <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
-              <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
-              <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
-              <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+    <div className="">
+      {/* PageBanner skeleton */}
+      <section
+        className="
+          relative overflow-hidden
+          bg-linear-to-br
+          from-(--color-primary-hover)
+          via-(--color-primary)
+          to-[#062b52]
+          py-16 sm:py-20
+        "
+      >
+        <div className="fixit-container relative">
+          <div className="flex flex-col items-center text-center">
+            <Skeleton className="h-10 w-52 bg-white/20 sm:h-12 sm:w-64" />
+            <div className="mt-4 flex items-center gap-2">
+              <Skeleton className="h-4 w-12 bg-white/20" />
+              <Skeleton className="h-4 w-3 bg-white/20" />
+              <Skeleton className="h-4 w-24 bg-white/20" />
             </div>
-          </aside>
+          </div>
+        </div>
+      </section>
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          {/* Header */}
+          <div className="mb-8">
+            <Skeleton className="h-7 w-40" />
+            <Skeleton className="mt-2 h-4 w-72" />
+          </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <ServiceCardSkeleton key={i} />
-            ))}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_1fr]">
+            {/* Category sidebar */}
+            <aside>
+              <Skeleton className="mb-2 h-3 w-20" />
+              <div className="flex gap-2 overflow-hidden lg:flex-col">
+                <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+                <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+                <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+                <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+                <Skeleton className="h-9 w-24 flex-none rounded-md lg:w-full" />
+              </div>
+            </aside>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <ServiceCardSkeleton key={i} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
