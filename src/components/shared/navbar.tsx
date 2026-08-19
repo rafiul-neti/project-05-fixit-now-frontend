@@ -20,6 +20,7 @@ import {
 import { LayoutDashboard, LogOut, Menu, Settings, User } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { USER_ROLE } from "@/lib/types/enum";
@@ -34,7 +35,6 @@ interface NavItem {
 interface UserDropdownItem {
   label: string;
   icon: React.ReactNode;
-  onClick?: () => void;
   isDangerous?: boolean;
 }
 
@@ -54,10 +54,6 @@ const userMenuItems: UserDropdownItem[] = [
     label: "Logout",
     icon: <LogOut className="w-4 h-4" />,
     isDangerous: true,
-    onClick: async () => {
-      await logout();
-      // set();
-    },
   },
 ];
 
@@ -92,23 +88,38 @@ export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleMenuItemClick = (item: UserDropdownItem) => {
-    if (item.label === "Logout" && item.onClick) {
-      item.onClick();
-      toast.add({
-        type: "success",
-        description: "User logged out successfully.",
-      });
-      router.push("/login");
-    } else {
-      switch (item.label) {
-        case "Dashboard":
-          router.push(`/dashboard/${user.data.role.toLowerCase()}`);
-          break;
+  async function handleMenuItemClick(item: UserDropdownItem) {
+    if (item.label === "Logout") {
+      setIsLoggingOut(true);
+      try {
+        await logout();
+        toast.add({
+          type: "success",
+          description: "You have successfully logged out.",
+        });
+        router.push("/");
+        router.refresh();
+      } catch (error) {
+        setIsLoggingOut(false);
+        toast.add({
+          type: "error",
+          description:
+            error instanceof Error
+              ? error.message
+              : "Couldn't log out. Please try again.",
+        });
       }
+      return;
     }
-  };
+
+    switch (item.label) {
+      case "Dashboard":
+        router.push(`/dashboard/${user.data.role.trim().toLowerCase()}`);
+        break;
+    }
+  }
 
   return (
     <nav className="sticky top-0 z-30 border-b border-border bg-background/95">
@@ -212,16 +223,23 @@ export function Navbar({ user }: NavbarProps) {
                   </div>
                   <DropdownMenuSeparator />
 
-                  {userMenuItems.map((item) => (
-                    <DropdownMenuItem
-                      key={item.label}
-                      onClick={() => handleMenuItemClick(item)}
-                      className={item.isDangerous ? "text-destructive" : ""}
-                    >
-                      <span className="mr-2">{item.icon}</span>
-                      {item.label}
-                    </DropdownMenuItem>
-                  ))}
+                  {userMenuItems.map((item) => {
+                    const isLogoutItem = item.label === "Logout";
+                    const isBusy = isLogoutItem && isLoggingOut;
+                    return (
+                      <DropdownMenuItem
+                        key={item.label}
+                        onClick={() => handleMenuItemClick(item)}
+                        disabled={isBusy}
+                        className={item.isDangerous ? "text-destructive" : ""}
+                      >
+                        <span className="mr-2">
+                          {isBusy ? <Spinner /> : item.icon}
+                        </span>
+                        {isBusy ? "Logging out…" : item.label}
+                      </DropdownMenuItem>
+                    );
+                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

@@ -149,3 +149,17 @@ export interface IUpdateUserStatusResponse {
     updatedAt: string;
   };
 }
+
+// create service action
+export interface ICreateService extends ICategoryService {
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+export interface ICreateServiceResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: ICreateService;
+}

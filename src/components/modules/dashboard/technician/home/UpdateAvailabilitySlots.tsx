@@ -15,6 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import type { TechnicianAvailability } from "@/lib/types/modules/technician/technician.types";
 import { formatTechnicianAvailabilityTime } from "@/utils/formattedDate";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  UpdateAvailabilityInput,
+  updateAvailabilitySchema,
+} from "@/validation/schemas/modules/technician";
+import { updateAvailabilitySlots } from "@/actions/modules/dashboard/technician/updateAvaiabilitySlots";
+import { toast } from "@/components/ui/toast";
 
 const WEEKEND_DAY_LABEL: Record<TechnicianAvailability["weekendDays"], string> =
   {
@@ -37,43 +45,51 @@ function EditAvailabilityDialog({
   onSave: (next: TechnicianAvailability) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [startTime, setStartTime] = useState(availability.startTime);
-  const [endTime, setEndTime] = useState(availability.endTime);
-  const [weekendDays, setWeekendDays] = useState(availability.weekendDays);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function resetToCurrentValues() {
-    setStartTime(availability.startTime);
-    setEndTime(availability.endTime);
-    setWeekendDays(availability.weekendDays);
-    setError(null);
-  }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateAvailabilityInput>({
+    resolver: zodResolver(updateAvailabilitySchema),
+    defaultValues: {
+      startTime: availability.startTime,
+      endTime: availability.endTime,
+      weekendDays: availability.weekendDays,
+    },
+  });
 
   function handleOpenChange(nextOpen: boolean) {
-    if (nextOpen) resetToCurrentValues();
+    if (nextOpen) {
+      reset({
+        startTime: availability.startTime,
+        endTime: availability.endTime,
+        weekendDays: availability.weekendDays,
+      });
+      setSubmitError(null);
+    }
     setOpen(nextOpen);
   }
 
-  async function handleSave() {
-    if (startTime >= endTime) {
-      setError("Start time must be before end time.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError(null);
+  async function onSubmit(values: UpdateAvailabilityInput) {
+    setSubmitError(null);
     try {
-      // TODO: call update-availability action once wired up — await it,
-      // need to call onSave with the response's actual saved values after it resolves successfully.
-
-
-      onSave({ startTime, endTime, weekendDays });
-      setIsSubmitting(false);
+      const result = await updateAvailabilitySlots(values);
+      onSave({
+        startTime: result.startTime,
+        endTime: result.endTime,
+        weekendDays: result.weekendDays,
+      });
       setOpen(false);
+
+      toast.add({
+        type: "success",
+        description: "Your availability slots updated successfully.",
+      });
     } catch (err) {
-      setIsSubmitting(false);
-      setError(
+      setSubmitError(
         err instanceof Error
           ? err.message
           : "Something went wrong. Please try again.",
@@ -95,7 +111,7 @@ function EditAvailabilityDialog({
         <Pencil size={15} />
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit availability</DialogTitle>
           <DialogDescription>
@@ -103,39 +119,46 @@ function EditAvailabilityDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
+        <form
+          id="edit-availability-form"
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="text-sm">
               <span className="mb-1 block font-medium text-navy">
                 Start time
               </span>
               <input
                 type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                {...register("startTime")}
                 className="w-full rounded-md border border-border px-3 py-2 text-sm"
               />
+              {errors.startTime && (
+                <p className="mt-1 text-xs text-(--error)">
+                  {errors.startTime.message}
+                </p>
+              )}
             </label>
             <label className="text-sm">
               <span className="mb-1 block font-medium text-navy">End time</span>
               <input
                 type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
+                {...register("endTime")}
                 className="w-full rounded-md border border-border px-3 py-2 text-sm"
               />
+              {errors.endTime && (
+                <p className="mt-1 text-xs text-(--error)">
+                  {errors.endTime.message}
+                </p>
+              )}
             </label>
           </div>
 
           <label className="text-sm">
             <span className="mb-1 block font-medium text-navy">Day off</span>
             <select
-              value={weekendDays}
-              onChange={(e) =>
-                setWeekendDays(
-                  e.target.value as TechnicianAvailability["weekendDays"],
-                )
-              }
+              {...register("weekendDays")}
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             >
               {WEEKEND_DAY_OPTIONS.map((day) => (
@@ -144,16 +167,30 @@ function EditAvailabilityDialog({
                 </option>
               ))}
             </select>
+            {errors.weekendDays && (
+              <p className="mt-1 text-xs text-(--error)">
+                {errors.weekendDays.message}
+              </p>
+            )}
           </label>
 
-          {error && <p className="text-sm text-(--error)">{error}</p>}
-        </div>
+          {submitError && (
+            <p className="text-sm text-(--error)">{submitError}</p>
+          )}
+        </form>
 
-        <DialogFooter>
-          <DialogClose render={<Button variant="outline" />}>
+        <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <DialogClose
+            render={<Button variant="outline" className="w-full sm:w-auto" />}
+          >
             Cancel
           </DialogClose>
-          <Button onClick={handleSave} disabled={isSubmitting}>
+          <Button
+            type="submit"
+            form="edit-availability-form"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+          >
             {isSubmitting ? "Saving…" : "Save changes"}
           </Button>
         </DialogFooter>

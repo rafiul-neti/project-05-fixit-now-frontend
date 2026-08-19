@@ -12,6 +12,8 @@ import {
   createServiceSchema,
 } from "@/validation/schemas/modules/admin/manage-categories";
 import { createService } from "@/actions/modules/dashboard/admin/createService";
+import { toast } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
 
 interface CreateServiceFormProps {
   categories: ICategoryWithService[];
@@ -51,7 +53,7 @@ export default function CreateServiceForm({
   async function onSubmit(values: CreateServiceFormValues) {
     setSubmitError(null);
     try {
-      const service = await createService(values);
+      const { data: service, message } = await createService(values);
       onCreated(values.categoryId, {
         id: service.id,
         name: service.name,
@@ -62,8 +64,17 @@ export default function CreateServiceForm({
         name: "",
         description: "",
       });
-    } catch {
-      setSubmitError("Couldn't create the service. Try again.");
+
+      toast.add({
+        type: "success",
+        description: message,
+      });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Couldn't create the service. Please try again!",
+      );
     }
   }
 
@@ -159,7 +170,7 @@ export default function CreateServiceForm({
               disabled={isSubmitting}
               className="btn-primary w-full sm:w-auto"
             >
-              {isSubmitting ? "Creating…" : "Create service"}
+              {isSubmitting ? <Spinner /> : "Create service"}
             </button>
           </div>
         </form>

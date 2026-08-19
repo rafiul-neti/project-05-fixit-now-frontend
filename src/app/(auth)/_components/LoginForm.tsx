@@ -33,7 +33,7 @@ const LoginForm = () => {
 
       toast.add({
         type: "success",
-        description: result.message,
+        description: "You have succesfully logged in.",
       });
 
       setValue("email", "");
