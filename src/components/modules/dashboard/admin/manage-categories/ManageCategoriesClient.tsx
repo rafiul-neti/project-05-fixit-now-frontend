@@ -4,18 +4,22 @@ import { useState } from "react";
 import CreateCategoryForm from "./CreateCategoryForm";
 import CreateServiceForm from "./CreateServiceForm";
 import CategoryList from "./CategoryList";
-import { ICategory, ICategoryService } from "@/lib/types/modules/admin/admin.types";
+import {
+  ICategoryWithService,
+  ICategoryService,
+} from "@/lib/types/modules/admin/admin.types";
 
 interface ManageCategoriesClientProps {
-  initialCategories: ICategory[];
+  initialCategories: ICategoryWithService[];
 }
 
 export default function ManageCategoriesClient({
   initialCategories,
 }: ManageCategoriesClientProps) {
-  const [categories, setCategories] = useState<ICategory[]>(initialCategories);
+  const [categories, setCategories] =
+    useState<ICategoryWithService[]>(initialCategories);
 
-  function handleCategoryCreated(category: ICategory) {
+  function handleCategoryCreated(category: ICategoryWithService) {
     setCategories((prev) => [category, ...prev]);
   }
 

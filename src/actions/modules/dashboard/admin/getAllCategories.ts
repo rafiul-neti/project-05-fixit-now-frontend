@@ -14,7 +14,7 @@ export async function getAllCategories() {
       },
       cache: "force-cache",
       next: {
-        tags: ["manage-bookings"],
+        tags: ["manage-categories"],
         revalidate: 60 * 60 * 2, // 2 hours
       },
     },

@@ -1,7 +1,7 @@
-import { ICategory } from "@/lib/types/modules/admin/admin.types";
+import { ICategoryWithService } from "@/lib/types/modules/admin/admin.types";
 
 interface CategoryListProps {
-  categories: ICategory[];
+  categories: ICategoryWithService[];
 }
 
 export default function CategoryList({ categories }: CategoryListProps) {

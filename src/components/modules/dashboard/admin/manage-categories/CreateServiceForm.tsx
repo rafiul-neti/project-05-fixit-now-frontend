@@ -3,12 +3,18 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ICategory, ICategoryService } from "@/lib/types/modules/admin/admin.types";
-import { CreateServiceFormValues, createServiceSchema } from "@/validation/schemas/modules/admin/manage-categories";
+import {
+  ICategoryWithService,
+  ICategoryService,
+} from "@/lib/types/modules/admin/admin.types";
+import {
+  CreateServiceFormValues,
+  createServiceSchema,
+} from "@/validation/schemas/modules/admin/manage-categories";
 import { createService } from "@/actions/modules/dashboard/admin/createService";
 
 interface CreateServiceFormProps {
-  categories: ICategory[];
+  categories: ICategoryWithService[];
   onCreated: (categoryId: string, service: ICategoryService) => void;
 }
 

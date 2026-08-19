@@ -3,12 +3,17 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ICategory } from "@/lib/types/modules/admin/admin.types";
-import { CreateCategoryFormValues, createCategorySchema } from "@/validation/schemas/modules/admin/manage-categories";
+import { ICategoryWithService } from "@/lib/types/modules/admin/admin.types";
+import {
+  CreateCategoryFormValues,
+  createCategorySchema,
+} from "@/validation/schemas/modules/admin/manage-categories";
 import { createCategory } from "@/actions/modules/dashboard/admin/createCategory";
+import { toast } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
 
 interface CreateCategoryFormProps {
-  onCreated: (category: ICategory) => void;
+  onCreated: (category: ICategoryWithService) => void;
 }
 
 export default function CreateCategoryForm({
@@ -29,11 +34,20 @@ export default function CreateCategoryForm({
   async function onSubmit(values: CreateCategoryFormValues) {
     setSubmitError(null);
     try {
-      const category = await createCategory(values.name);
+      const { category, message } = await createCategory(values.name);
       onCreated(category);
       reset();
-    } catch {
-      setSubmitError("Couldn't create the category. Try again.");
+
+      toast.add({
+        type: "success",
+        description: message,
+      });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Couldn't create the category. Try again.",
+      );
     }
   }
 
@@ -71,7 +85,7 @@ export default function CreateCategoryForm({
           disabled={isSubmitting}
           className="btn-primary sm:w-auto sm:mt-6"
         >
-          {isSubmitting ? "Creating…" : "Create category"}
+          {isSubmitting ? <Spinner /> : "Create category"}
         </button>
       </form>
 

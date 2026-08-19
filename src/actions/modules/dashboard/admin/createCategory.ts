@@ -1,36 +1,30 @@
-"use server"
+"use server";
 
-import { ICategory } from "@/lib/types/modules/admin/admin.types";
+import { ICreateCategoryResponse } from "@/lib/types/modules/admin/admin.types";
+import { getAccessToken } from "@/service/getAccessToken";
+import { revalidateTag } from "next/cache";
 
+export async function createCategory(name: string) {
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) throw new Error(message);
 
-//  TODO: have to call the real API to create a category below
+  const res = await fetch(
+    `${process.env.BACKEND_API_URL}/api/admin/categories`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `accessToken=${accessToken}`,
+      },
+      body: JSON.stringify({ name }),
+    },
+  );
 
-/*
- *   import { getAccessToken } from "@/lib/auth/getAccessToken";
- *
- *   export async function createCategory(name: string): Promise<Category> {
- *     const accessToken = await getAccessToken();
- *     const res = await fetch(`${process.env.BACKEND_URL}/api/admin/categories`, {
- *       method: "POST",
- *       headers: {
- *         "Content-Type": "application/json",
- *         Authorization: `Bearer ${accessToken}`,
- *       },
- *       body: JSON.stringify({ name }),
- *     });
- *     if (!res.ok) throw new Error("Failed to create category");
- *     return res.json() as Promise<Category>;
- *   }
- */
+  const result: ICreateCategoryResponse = await res.json();
 
-export async function createCategory(name: string): Promise<ICategory> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  if (!result.success) throw new Error(result.message);
 
-  return {
-    id: crypto.randomUUID(),
-    name,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    services: [],
-  };
+  revalidateTag("manage-categories", "max");
+
+  return { category: result.data, message: result.message };
 }

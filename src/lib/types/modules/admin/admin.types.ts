@@ -40,7 +40,6 @@ export interface AdminDashboardResponse extends APIResponse {
   data: AdminDashboardData;
 }
 
-
 // manage user page
 export interface ManagedUser {
   id: string;
@@ -55,7 +54,6 @@ export interface ManagedUser {
 export interface GetAllUsersResponse extends APIResponse {
   data: ManagedUser[];
 }
-
 
 // manage bookings page types
 export type BookingStatusType =
@@ -120,7 +118,7 @@ export interface ICategoryService {
   description: string;
 }
 
-export interface ICategory {
+export interface ICategoryWithService {
   id: string;
   name: string;
   createdAt: string;
@@ -128,6 +126,12 @@ export interface ICategory {
   services: ICategoryService[];
 }
 
+export interface ICreateCategoryResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: ICategoryWithService;
+}
 
 // update user status response
 export interface IUpdateUserStatusResponse {
