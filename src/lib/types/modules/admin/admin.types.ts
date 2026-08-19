@@ -127,3 +127,21 @@ export interface ICategory {
   updatedAt: string;
   services: ICategoryService[];
 }
+
+
+// update user status response
+export interface IUpdateUserStatusResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: USER_ROLE;
+    status: UserStatus;
+    createdAt: string;
+    updatedAt: string;
+  };
+}

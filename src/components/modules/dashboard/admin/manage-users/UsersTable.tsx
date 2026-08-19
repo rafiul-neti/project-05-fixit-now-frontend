@@ -1,6 +1,8 @@
 "use client";
 
+import { updateUserStatus } from "@/actions/modules/dashboard/admin/updateUserStatus";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
 import { USER_ROLE, UserStatus } from "@/lib/types/enum";
 import { ManagedUser } from "@/lib/types/modules/admin/admin.types";
 import { useState } from "react";
@@ -29,18 +31,24 @@ function StatusBadge({ status }: { status: UserStatus }) {
     <span
       className={`fixit-badge ${
         isActive
-          ? "bg-(--success-light) text-(--success)"
-          : "bg-(--error-light) text-(--error)"
+          ? "bg-(--success-light)! text-(--success)!"
+          : "bg-(--error-light)! text-(--error)!"
       }`}
     >
-      {isActive ? "Active" : "Suspended"}
+      {isActive ? "Unbanned" : "Banned"}
     </span>
   );
 }
 
+const ROLE_BADGE_CLASS: Record<USER_ROLE, string> = {
+  CUSTOMER: "bg-purple-100! text-purple-700!",
+  TECHNICIAN: "bg-teal-50! text-teal-700!",
+  ADMIN: "bg-rose-100! text-rose-700!",
+};
+
 function RoleBadge({ role }: { role: USER_ROLE }) {
   return (
-    <span className="fixit-badge bg-(--info-light) text-(--info)">
+    <span className={`fixit-badge ${ROLE_BADGE_CLASS[role]}`}>
       {ROLE_LABEL[role]}
     </span>
   );
@@ -64,19 +72,36 @@ export default function UsersTable({ initialUsers }: UsersTableProps) {
     });
 
     try {
-      //   const result = await updateUserStatus(user.id, nextStatus);
-      // Only update local state after the mutation actually resolves —
-      // a failed request must not appear to succeed.
-      //   setUsers((prev) =>
-      //     prev.map((u) =>
-      //       u.id === user.id ? { ...u, status: result.status } : u,
-      //     ),
-      //   );
-    } catch {
+      const { data: result, message } = await updateUserStatus(user.id, {
+        status: nextStatus,
+      });
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === user.id ? { ...u, status: result.status } : u,
+        ),
+      );
+
+      toast.add({
+        type: "success",
+        description: message,
+      });
+    } catch (error) {
       setErrorByUserId((prev) => ({
         ...prev,
-        [user.id]: "Couldn't update this user. Try again.",
+        [user.id]:
+          error instanceof Error
+            ? error.message
+            : "Couldn't update this user. Try again.",
       }));
+
+      toast.add({
+        type: "error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Couldn't update this user. Try again.",
+      });
     } finally {
       setPendingUserId(null);
     }
@@ -110,7 +135,7 @@ export default function UsersTable({ initialUsers }: UsersTableProps) {
                 <td className="py-3 pr-4">
                   <RoleBadge role={user.role} />
                 </td>
-                <td className="py-3 pr-4">
+                <td className={`py-3 pr-4 `}>
                   <StatusBadge status={user.status} />
                 </td>
                 <td className="py-3 pr-4 text-sm text-muted-foreground">
@@ -133,11 +158,13 @@ export default function UsersTable({ initialUsers }: UsersTableProps) {
                           : "btn-secondary border-(--success) text-(--success) hover:bg-(--success-light)"
                       }
                     >
-                      {pendingUserId === user.id
-                        ? <Spinner />
-                        : user.status === UserStatus.UNBAN
-                          ? UserStatus.BAN
-                          : UserStatus.UNBAN}
+                      {pendingUserId === user.id ? (
+                        <Spinner />
+                      ) : user.status === UserStatus.UNBAN ? (
+                        UserStatus.BAN
+                      ) : (
+                        UserStatus.UNBAN
+                      )}
                     </button>
                     {errorByUserId[user.id] && (
                       <span className="text-xs text-(--error)">
@@ -175,21 +202,23 @@ export default function UsersTable({ initialUsers }: UsersTableProps) {
                 onClick={() => handleToggleStatus(user)}
                 disabled={pendingUserId === user.id}
                 aria-label={
-                  user.status === "UNBAN"
+                  user.status === UserStatus.UNBAN
                     ? `Suspend ${user.name}`
                     : `Activate ${user.name}`
                 }
                 className={
-                  user.status === "UNBAN"
+                  user.status === UserStatus.UNBAN
                     ? "btn-secondary w-full border-(--error) text-(--error) hover:bg-(--error-light)"
                     : "btn-secondary w-full border-(--success) text-(--success) hover:bg-(--success-light)"
                 }
               >
-                {pendingUserId === user.id
-                  ? <Spinner />
-                  : user.status === "UNBAN"
-                    ? "Suspend"
-                    : "Activate"}
+                {pendingUserId === user.id ? (
+                  <Spinner />
+                ) : user.status === UserStatus.UNBAN ? (
+                  UserStatus.BAN
+                ) : (
+                  UserStatus.UNBAN
+                )}
               </button>
               {errorByUserId[user.id] && (
                 <span className="text-xs text-(--error)">

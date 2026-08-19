@@ -283,7 +283,7 @@ export default function AllBookingsTable({
                   {isExpanded && (
                     <div className="mt-4 flex flex-col gap-4">
                       <BookingDetails booking={booking} />
-                      <div className="flex flex-col gap-1 border-t border-border pt-4">
+                      {/* <div className="flex flex-col gap-1 border-t border-border pt-4">
                         <StatusActions
                           booking={booking}
                           pending={isPending}
@@ -296,7 +296,7 @@ export default function AllBookingsTable({
                             {errorByBookingId[booking.id]}
                           </span>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                   )}
                 </div>

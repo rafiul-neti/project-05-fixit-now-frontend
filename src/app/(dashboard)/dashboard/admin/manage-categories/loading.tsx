@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ManageCategoriesLoading() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="p-4 flex flex-col gap-6">
       <div>
         <Skeleton className="h-8 w-56" />
         <Skeleton className="h-4 w-80 mt-2" />

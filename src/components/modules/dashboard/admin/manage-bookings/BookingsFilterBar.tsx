@@ -45,7 +45,7 @@ export default function BookingsFilterBar({
         >
           {STATUS_OPTIONS.map((status) => (
             <option key={status} value={status}>
-              {status === "ALL" ? "All statuses" : STATUS_LABEL[status]}
+              {status === "ALL" ? "Select status" : STATUS_LABEL[status]}
             </option>
           ))}
         </select>

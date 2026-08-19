@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AllBookingsLoading() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="p-4 flex flex-col gap-6">
       <div>
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-96 mt-2" />
