@@ -65,7 +65,5 @@ export const registerAction = async (data: RegisterOutput) => {
     throw new Error(result.message);
   }
 
-  console.dir(result, { depth: null });
-
   return result;
 };

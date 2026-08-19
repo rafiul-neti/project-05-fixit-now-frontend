@@ -4,8 +4,6 @@ import UsersTable from "@/components/modules/dashboard/admin/manage-users/UsersT
 export default async function ManageUsersPage() {
   const users = await getAllUsers();
 
-  console.dir(users, { depth: null });
-
   return (
     <div className="fixit-container py-10 flex flex-col gap-6">
       <div>

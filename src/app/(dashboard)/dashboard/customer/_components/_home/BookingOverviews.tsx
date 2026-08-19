@@ -16,7 +16,7 @@ const UpcomingCustomerBookings = async () => {
     (booking: Booking) =>
       booking.status === BookingStatus.ACCEPTED ||
       booking.status === BookingStatus.IN_PROGRESS ||
-      booking.status === BookingStatus.PAID,
+      booking.status === BookingStatus.COMPLETED,
   );
 
   const completedServices = bookings.filter(

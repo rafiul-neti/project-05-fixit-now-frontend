@@ -14,7 +14,5 @@ export const getServices = async (limit?: number) => {
 
   const result = await res.json();
 
-  console.dir(result, { depth: null });
-
   return result.data;
 };

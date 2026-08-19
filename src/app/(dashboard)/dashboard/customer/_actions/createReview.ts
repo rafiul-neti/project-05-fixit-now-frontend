@@ -21,8 +21,6 @@ export const createReview = async (
 
   const { id } = parsed.data;
 
-  console.log("booking ID", id);
-
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/reviews/${id}`, {
     method: "POST",
     headers: {
@@ -33,8 +31,6 @@ export const createReview = async (
   });
 
   const result = await res.json();
-
-  console.log(result);
 
   if (!result.success) {
     throw new Error(result.message);

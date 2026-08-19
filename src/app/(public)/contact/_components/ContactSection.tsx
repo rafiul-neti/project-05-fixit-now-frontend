@@ -43,9 +43,9 @@ export default function ContactSection() {
   } = useForm<ContactFormValues>();
 
   const onSubmit = async (data: ContactFormValues) => {
-    console.log("Contact form data:", data);
+   
 
-    // Connect your backend API here later.
+    // TODO: Have to connect my backend API here
 
     toast.add({
       type: "success",
