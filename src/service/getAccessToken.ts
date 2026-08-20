@@ -11,7 +11,7 @@ export const getAccessToken = async () => {
   if (!accessToken && !refreshToken) {
     return {
       success: false,
-      message: "User not logged in",
+      message: "You are not logged in! Please login.",
     };
   }
 

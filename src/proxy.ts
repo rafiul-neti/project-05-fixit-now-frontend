@@ -4,14 +4,13 @@ import { getAccessToken } from "./service/getAccessToken";
 import { USER_ROLE } from "./lib/types/enum";
 
 const AUTH_ROUTES = ["/login", "/register"];
-const PUBLIC_ROUTES = [
-  "/",
+const PUBLIC_PREFIX_ROUTES = [
   "/services",
   "/technicians",
   "/about",
   "/contact",
-  ...AUTH_ROUTES,
 ];
+const PUBLIC_ROUTES = ["/", ...PUBLIC_PREFIX_ROUTES, ...AUTH_ROUTES];
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -19,9 +18,9 @@ export async function proxy(request: NextRequest) {
 
   const { accessToken, role } = await getAccessToken();
 
-  const isPublic = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/"),
-  );
+  const isPublic =
+    PUBLIC_ROUTES.includes(pathname) ||
+    PUBLIC_PREFIX_ROUTES.some((route) => pathname.startsWith(route + "/"));
 
   // Protected routes
   if (!isPublic && !accessToken) {
@@ -32,7 +31,7 @@ export async function proxy(request: NextRequest) {
     response.cookies.delete("accessToken");
     response.cookies.delete("refreshToken");
 
-    if (!PUBLIC_ROUTES.includes(pathname)) {
+    if (!isPublic) {
       const loginURL = new URL("/login", request.url);
       loginURL.searchParams.set("redirectTo", pathname);
       return NextResponse.redirect(loginURL);
