@@ -52,6 +52,7 @@ function TechnicianRow({
         <Button
           variant="outline"
           size="sm"
+          nativeButton={false}
           className={`btn-secondary`}
           render={<Link href={`/technicians/${technician.id}`} />}
         >
@@ -61,6 +62,7 @@ function TechnicianRow({
           technicianId={technician.id}
           technicianName={technician.name}
           serviceName={technician.serviceName}
+          serviceId={technician.serviceId}
           serviceCategory={technician.serviceCategory}
         />
       </div>

@@ -15,6 +15,7 @@ export interface ServiceTechnician {
   name: string;
   averageRating: number;
   hourlyRate: number;
+  serviceId: string;
   serviceName: string;
   serviceCategory: string;
   serviceDescription: string;
