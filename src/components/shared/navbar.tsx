@@ -110,6 +110,8 @@ export function Navbar({ user }: NavbarProps) {
               ? error.message
               : "Couldn't log out. Please try again.",
         });
+      } finally {
+        setIsLoggingOut(false);
       }
       return;
     }
