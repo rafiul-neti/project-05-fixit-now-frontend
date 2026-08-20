@@ -20,6 +20,7 @@ import {
 } from "@/validation/schemas/modules/public/booking-form.validation";
 import { bookService } from "@/actions/modules/public/service/bookAService";
 import { toast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 export function BookNowDialog({
   technicianId,
@@ -36,6 +37,7 @@ export function BookNowDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const router = useRouter()
 
   const {
     register,
@@ -88,6 +90,7 @@ export function BookNowDialog({
         description:
           "Thank you for booking the service. You will be contacted by the technician as soon as possible.",
       });
+      router.push("/dashboard/customer/my-bookings");
     } catch (err) {
       console.error(err);
       toast.add({

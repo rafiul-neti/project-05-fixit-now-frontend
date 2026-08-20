@@ -8,7 +8,7 @@ import { getReviews } from "../_actions/getReviews";
 import { ServicesBrowser } from "@/components/modules/public/service/ServicesBrowser";
 
 const ServicesPage = async () => {
-  const services = await getServices();
+  const services = await getServices(36);
   const technicians = await getTechnicians();
   const reviews = await getReviews();
   return (

@@ -34,9 +34,6 @@ function ServiceCard({ service }: { service: PublicService }) {
 export function ServicesBrowser({ services }: { services: PublicService[] }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Category list derived from the services themselves — no separate
-  // categories endpoint needed, since every service already carries its
-  // category name. Deduplicated and alphabetized for a stable sidebar order.
   const categories = useMemo(() => {
     const unique = new Map<string, string>();
     for (const service of services) {
