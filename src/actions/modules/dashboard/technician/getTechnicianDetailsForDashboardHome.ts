@@ -3,12 +3,22 @@ import { idValidationSchema } from "@/validation";
 import { callApiThroughTechnicianId } from "./callApiThroughTechnicianId";
 
 async function getTechnicianDetailsForDashboardHome(technicianId: string) {
-  const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const parsed = idValidationSchema.safeParse({ id: technicianId });
   if (!parsed.success) {
-    throw new Error("Invalid technician reference.");
+    const parsedMessage =
+      parsed.error.issues[0]?.message ?? "Invalid technician reference.";
+    return {
+      success: false,
+      message: parsedMessage,
+    };
   }
 
   const { id } = parsed.data;
@@ -32,10 +42,13 @@ async function getTechnicianDetailsForDashboardHome(technicianId: string) {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }
 
 export async function returnTechnicianDashboardHomepageData() {

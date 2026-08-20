@@ -14,18 +14,34 @@ export async function handleBookingStatus(
 ) {
   const { success, message, accessToken } = await getAccessToken();
   if (!success) {
-    throw new Error(message);
-  }
-
-  const { success: isValidBooking, data } =
-    updateBookingStatusSchema.safeParse(status);
-  if (!isValidBooking) {
-    throw new Error("Invalid Booking reference!");
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
   }
 
   const parsed = idValidationSchema.safeParse({ id: bookingId });
   if (!parsed.success) {
-    throw new Error("Invalid booking reference.");
+    const parsedMessage =
+      parsed.error.issues[0]?.message ?? "Invalid payment reference.";
+    return {
+      success: false,
+      message: parsedMessage,
+    };
+  }
+
+  const {
+    success: isValidBooking,
+    data,
+    error,
+  } = updateBookingStatusSchema.safeParse(status);
+  if (!isValidBooking) {
+    const parsedMessage =
+      error.issues[0]?.message ?? "Booking status is invalid";
+    return {
+      success: false,
+      message: parsedMessage,
+    };
   }
 
   const { id } = parsed.data;
@@ -44,6 +60,11 @@ export async function handleBookingStatus(
 
   const result = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: false,
+      message: result.message,
+    };
+  }
   revalidateTag("technician-dashboard", "max");
 }

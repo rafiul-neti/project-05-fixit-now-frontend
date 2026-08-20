@@ -5,7 +5,12 @@ import { getAccessToken } from "@/service/getAccessToken";
 
 export async function getAdminDashboardStats() {
   const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  if (!success) {
+    return {
+      success,
+      message,
+    };
+  }
 
   const res = await fetch(
     `${process.env.BACKEND_API_URL}/api/admin/dashboard`,
@@ -25,7 +30,12 @@ export async function getAdminDashboardStats() {
 
   const result: AdminDashboardResponse = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: result.success,
+      message: result.message,
+    };
+  }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }

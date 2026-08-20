@@ -6,7 +6,7 @@ export const idValidationSchema = z.object({
 });
 
 export const updateBookingStatusSchema = z.object({
-  status: z.enum(BookingStatus),
+  status: z.enum(BookingStatus, { error: "Invalid booking status." }),
 });
 
 export type T_Id = z.infer<typeof idValidationSchema>;

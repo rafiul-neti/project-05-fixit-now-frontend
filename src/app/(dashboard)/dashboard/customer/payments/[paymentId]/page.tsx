@@ -8,7 +8,12 @@ import {
   Star,
   Wrench,
 } from "lucide-react";
-import { formatDateTime, formatNaNCurrency, initials, PAYMENT_STATUS_CONFIG } from "../../_utils";
+import {
+  formatDateTime,
+  formatNaNCurrency,
+  initials,
+  PAYMENT_STATUS_CONFIG,
+} from "../../_utils";
 import { SectionCard } from "../../_components/SectionCard";
 import { InfoRow } from "../../_components/InfoRow";
 import { getCustomerPaymentDetails } from "@/actions/modules/dashboard/customer";
@@ -21,7 +26,21 @@ export default async function CustomerPaymentDetailsPage({
   params: Promise<{ paymentId: string }>;
 }) {
   const { paymentId } = await params;
-  const payment: PaymentDetails = await getCustomerPaymentDetails(paymentId);
+  const result = await getCustomerPaymentDetails(paymentId);
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the page. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const payment: PaymentDetails = result.data;
 
   const status = PAYMENT_STATUS_CONFIG[payment.status];
   const { bookingDetails } = payment;

@@ -3,7 +3,21 @@ import { AdminStatsRow } from "@/components/modules/dashboard/admin/AdminStatsRo
 import { RecentBookingsList } from "@/components/modules/dashboard/admin/RecentBookingsList";
 
 export default async function AdminDashboardPage() {
-  const { stats, recentBookings } = await getAdminDashboardStats();
+  const result = await getAdminDashboardStats();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the dashboard. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { stats, recentBookings } = result.data;
 
   return (
     <div className="min-h-screen bg-(--background-secondary) py-10">

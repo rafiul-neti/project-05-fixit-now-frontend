@@ -10,12 +10,17 @@ export async function bookService(
   data?: BookingFormInput,
 ) {
   const { success, message, accessToken } = await getAccessToken();
-  if (!success) throw new Error(message);
+  if (!success) {
+    return {
+      success: false,
+      message,
+    };
+  }
 
   let addressId: string | null = null;
   if (data?.useExistingAddress) {
     const customer = await getMe();
-    if (customer.data.addresses.length) {
+    if (customer.data?.addresses?.length) {
       addressId = customer.data.addresses[0].id;
     }
   }
@@ -38,7 +43,12 @@ export async function bookService(
 
   const result = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: result.success,
+      message: result.message,
+    };
+  }
 
   return result;
 }

@@ -34,20 +34,26 @@ export default function CreateCategoryForm({
   async function onSubmit(values: CreateCategoryFormValues) {
     setSubmitError(null);
     try {
-      const { category, message } = await createCategory(values.name);
-      onCreated(category);
-      reset();
+      const { category, message, success } = await createCategory(values.name);
+      if (success && category) {
+        onCreated(category);
+        reset();
 
-      toast.add({
-        type: "success",
-        description: message,
-      });
+        toast.add({
+          type: "success",
+          description: message,
+        });
+
+        return;
+      }
+
+      if (!success) {
+        setSubmitError(
+          message ? message : "Couldn't create the category. Try again.",
+        );
+      }
     } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Couldn't create the category. Try again.",
-      );
+      console.error(error);
     }
   }
 

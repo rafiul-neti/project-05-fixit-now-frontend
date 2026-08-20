@@ -77,23 +77,28 @@ function EditAvailabilityDialog({
     setSubmitError(null);
     try {
       const result = await updateAvailabilitySlots(values);
-      onSave({
-        startTime: result.startTime,
-        endTime: result.endTime,
-        weekendDays: result.weekendDays,
-      });
-      setOpen(false);
+      if (result.success) {
+        onSave({
+          startTime: result.data.startTime,
+          endTime: result.data.endTime,
+          weekendDays: result.data.weekendDays,
+        });
+        setOpen(false);
 
-      toast.add({
-        type: "success",
-        description: "Your availability slots updated successfully.",
-      });
+        toast.add({
+          type: "success",
+          description: "Your availability slots updated successfully.",
+        });
+      } else {
+        setSubmitError(
+          result.message
+            ? result.message
+            : "Something went wrong. Please try again.",
+        );
+      }
     } catch (err) {
-      setSubmitError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      console.error(err, "Error from update availability slots component.");
+      setSubmitError("Something went wrong. Please try again.");
     }
   }
 

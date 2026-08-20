@@ -32,9 +32,20 @@ function UpcomingBookingRow({
   ) {
     setIsSubmitting(true);
     setError(null);
-
     try {
-      await handleBookingStatus(inProgressStatus, bookingId);
+      const result = await handleBookingStatus(inProgressStatus, bookingId);
+
+      if (!result?.success) {
+        toast.add({
+          type: "error",
+          description:
+            result?.message ?? "Couldn't change the status! Please try again.",
+        });
+
+        setIsSubmitting(false);
+        return;
+      }
+
       toast.add({
         type: "success",
         description: `Booking '${inProgressStatus.status}`,
@@ -44,11 +55,12 @@ function UpcomingBookingRow({
 
       onStatusChange(bookingId, inProgressStatus.status);
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again!",
-      );
+      console.error(error, "Error from In Upcoming Booking Row Component!");
+      setIsSubmitting(false);
+      toast.add({
+        type: "error",
+        description: "Couldn't change the status! Please try again.",
+      });
     }
   }
 

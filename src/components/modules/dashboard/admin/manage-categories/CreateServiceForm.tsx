@@ -53,28 +53,33 @@ export default function CreateServiceForm({
   async function onSubmit(values: CreateServiceFormValues) {
     setSubmitError(null);
     try {
-      const { data: service, message } = await createService(values);
-      onCreated(values.categoryId, {
-        id: service.id,
-        name: service.name,
-        description: service.description,
-      });
-      reset({
-        categoryId: values.categoryId,
-        name: "",
-        description: "",
-      });
+      const result = await createService(values);
 
-      toast.add({
-        type: "success",
-        description: message,
-      });
+      if (result.success) {
+        onCreated(values.categoryId, {
+          id: result.data.id,
+          name: result.data.name,
+          description: result.data.description,
+        });
+        reset({
+          categoryId: values.categoryId,
+          name: "",
+          description: "",
+        });
+
+        toast.add({
+          type: "success",
+          description: result.message,
+        });
+      } else {
+        setSubmitError(
+          result.message
+            ? result.message
+            : "Couldn't create the service. Please try again!",
+        );
+      }
     } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Couldn't create the service. Please try again!",
-      );
+      console.error(error, "--> Error from create service form!");
     }
   }
 

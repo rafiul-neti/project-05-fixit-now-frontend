@@ -3,9 +3,23 @@ import { IncomingBookingsList } from "@/components/modules/dashboard/technician/
 import { BookingStatus } from "@/lib/types/enum";
 
 export default async function ViewIncomingBookingsPage() {
-  const bookings = await getTechnicianIncomingBookings({
+  const result = await getTechnicianIncomingBookings({
     status: BookingStatus.REQUESTED,
   });
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the page. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data: bookings } = result;
 
   return (
     <div className="min-h-screen bg-(--background-secondary) py-10">

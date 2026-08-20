@@ -4,8 +4,13 @@ import { getAccessToken } from "@/service/getAccessToken";
 import { idValidationSchema } from "@/validation";
 
 export async function getCustomerPayments() {
-  const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/payments`, {
     method: "GET",
@@ -23,19 +28,32 @@ export async function getCustomerPayments() {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }
 
 export async function getCustomerPaymentDetails(paymentId: string) {
-  const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const parsed = idValidationSchema.safeParse({ id: paymentId });
   if (!parsed.success) {
-    throw new Error("Invalid payment reference.");
+    const parsedMessage =
+      parsed.error.issues[0]?.message ?? "Invalid payment reference.";
+    return {
+      success: false,
+      message: parsedMessage,
+    };
   }
 
   const { id } = parsed.data;
@@ -56,8 +74,11 @@ export async function getCustomerPaymentDetails(paymentId: string) {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }

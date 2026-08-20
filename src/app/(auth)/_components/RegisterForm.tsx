@@ -45,21 +45,28 @@ const RegisterForm = () => {
     try {
       const result = await registerAction(data);
 
-      toast.add({
-        type: "success",
-        description: `${result.message} Please Login.`,
-      });
+      if (result.success) {
+        toast.add({
+          type: "success",
+          description: `${result.message} Please Login.`,
+        });
 
-      reset();
+        reset();
 
-      router.push("/login");
+        router.push("/login");
+      } else {
+        toast.add({
+          type: "error",
+          description: result.message
+            ? result.message
+            : "Something went wrong! Please try again.",
+        });
+      }
     } catch (error: unknown) {
+      console.error(error, "Error from the register form.");
       toast.add({
         type: "error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong! Please try again.",
+        description: "Something went wrong! Please try again.",
       });
     }
   };

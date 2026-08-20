@@ -18,17 +18,22 @@ export function ConfirmPaymentButton({ bookingId }: ConfirmPaymentButtonProps) {
     setError(null);
 
     try {
-      const res = await createPaymentSession({ bookingId });
-      window.location.href = res;
-    } catch (err: unknown) {
-      setIsLoading(false);
-      if (err instanceof Error) {
-        setError(err.message);
+      const result = await createPaymentSession({ bookingId });
+      if (result.success) {
+        window.location.href = result.paymentURL;
       } else {
+        setIsLoading(false);
         setError(
-          "Something went wrong while starting your payment. Please try again.",
+          result.message ??
+            "Something went wrong while starting your payment. Please try again.",
         );
       }
+    } catch (err: unknown) {
+      setIsLoading(false);
+      setError(
+        "Something went wrong while starting your payment. Please try again.",
+      );
+      console.error(err, "Error from confirm payment button.");
     }
   }
 

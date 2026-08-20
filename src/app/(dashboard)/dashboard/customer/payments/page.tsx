@@ -4,7 +4,21 @@ import { CustomerPayment } from "@/lib/types/modules/payment/payment.types";
 import { PaymentsTable } from "@/components/modules/dashboard/customer/PaymentsTable";
 
 export default async function PaymentsPage() {
-  const payments: CustomerPayment[] = await getCustomerPayments();
+  const result = await getCustomerPayments();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the dashboard. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const payments: CustomerPayment[] = result.data;
 
   return (
     <div className="min-h-screen bg-(--background-secondary) py-10">

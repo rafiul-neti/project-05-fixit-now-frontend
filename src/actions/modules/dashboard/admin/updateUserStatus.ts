@@ -11,10 +11,23 @@ export async function updateUserStatus(
   user_status: { status: UserStatus },
 ) {
   const { success, message, accessToken } = await getAccessToken();
-  if (!success) throw new Error(message);
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const parsed = idValidationSchema.safeParse({ id: userId });
-  if (!parsed.success) throw new Error(parsed.error.message);
+  if (!parsed.success) {
+    const parsedMessage =
+      parsed.error.issues[0]?.message ?? "Invalid user reference!";
+    return {
+      success: parsed.success,
+      message: parsedMessage,
+    };
+  }
+  
   const { id } = parsed.data;
 
   const res = await fetch(
@@ -31,9 +44,15 @@ export async function updateUserStatus(
 
   const result: IUpdateUserStatusResponse = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return { success: result.success, message: result.message };
+  }
 
   revalidateTag("manage-get-users", "max");
 
-  return { data: result.data, message: result.message };
+  return {
+    success: result.success,
+    message: result.message,
+    data: result.data,
+  };
 }

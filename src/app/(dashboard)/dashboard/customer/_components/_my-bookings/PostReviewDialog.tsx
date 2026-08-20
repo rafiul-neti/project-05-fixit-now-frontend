@@ -48,18 +48,27 @@ export function PostReviewDialog({
   async function onSubmit(values: ReviewFormValues) {
     setSubmitError(null);
     try {
-      const res = await createReview(bookingId, values);
-      reset();
-      setOpen(false);
-      toast.add({
-        type: "success",
-        description: res.message,
-      });
+      const result = await createReview(bookingId, values);
+
+      if (result.success) {
+        reset();
+        setOpen(false);
+
+        toast.add({
+          type: "success",
+          description: result.message ?? "Review submission successful.",
+        });
+      } else {
+        setSubmitError(
+          result.message
+            ? result.message
+            : "Something went wrong while submitting your review. Please try again.",
+        );
+      }
     } catch (err) {
+      console.error(err, "Error from post review dialog component.");
       setSubmitError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong while submitting your review. Please try again.",
+        "Something went wrong while submitting your review. Please try again.",
       );
     }
   }

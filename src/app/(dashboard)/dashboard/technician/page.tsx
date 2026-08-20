@@ -10,7 +10,21 @@ import { RecentActivityList } from "@/components/modules/dashboard/technician/ho
 import TechnicianDashboardSections from "@/components/modules/dashboard/technician/home/TechnicianDashboardSections";
 
 export default async function TechnicianDashboardHomePage() {
-  const data = await returnTechnicianDashboardHomepageData();
+  const result = await returnTechnicianDashboardHomepageData();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the dashboard. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data } = result;
 
   const recentActivity = getRecentActivity(data.bookings);
   const stats = computeTechnicianStats(data);

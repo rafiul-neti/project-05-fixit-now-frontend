@@ -10,14 +10,18 @@ export interface ICreateServiceInput {
   description: string;
 }
 
-export async function createService(
-  input: ICreateServiceInput,
-): Promise<ICreateServiceResponse> {
+export async function createService(initialPayload: ICreateServiceInput) {
   const { success, message, accessToken } = await getAccessToken();
-  if (!success) throw new Error(message);
+
+  if (!success) {
+    return {
+      success,
+      message,
+    };
+  }
 
   const res = await fetch(
-    `${process.env.BACKEND_API_URL}/api/admin/categories/${input.categoryId}/services`,
+    `${process.env.BACKEND_API_URL}/api/admin/categories/${initialPayload.categoryId}/services`,
     {
       method: "POST",
       headers: {
@@ -25,15 +29,20 @@ export async function createService(
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        name: input.name,
-        description: input.description,
+        name: initialPayload.name,
+        description: initialPayload.description,
       }),
     },
   );
 
   const result: ICreateServiceResponse = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: result.success,
+      message: result.message,
+    };
+  }
 
   revalidateTag("manage-categories", "max");
 

@@ -1,6 +1,5 @@
 "use server";
 
-// import { LoginPrevState } from "@/lib/types/modules/auth/login.types";
 import { cookies } from "next/headers";
 import { LoginInput, RegisterOutput } from "../_validations";
 import { USER_ROLE } from "@/lib/types/enum";
@@ -17,7 +16,10 @@ export const loginAction = async ({ email, password }: LoginInput) => {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message ?? "Something went wrong! Please try again.",
+    };
   }
 
   if (result.success && result.data) {
@@ -36,7 +38,7 @@ export const loginAction = async ({ email, password }: LoginInput) => {
     });
   }
 
-  return result;
+  return { data: result, message: result.message };
 };
 
 export const registerAction = async (data: RegisterOutput) => {
@@ -50,7 +52,7 @@ export const registerAction = async (data: RegisterOutput) => {
 
     ...(data.registeringAs === USER_ROLE.Technician && data.technician),
   };
-  
+
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
     method: "POST",
     headers: {
@@ -62,8 +64,11 @@ export const registerAction = async (data: RegisterOutput) => {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
-  return result;
+  return { success: result.success, data: result };
 };

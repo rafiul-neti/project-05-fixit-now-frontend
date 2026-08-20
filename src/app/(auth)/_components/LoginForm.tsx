@@ -31,32 +31,39 @@ const LoginForm = () => {
     try {
       const result = await loginAction(data);
 
-      toast.add({
-        type: "success",
-        description: "You have succesfully logged in.",
-      });
+      if (result.success) {
+        toast.add({
+          type: "success",
+          description: result.message ?? "You have successfully logged in.",
+        });
 
-      setValue("email", "");
-      setValue("password", "");
+        setValue("email", "");
+        setValue("password", "");
 
-      if (redirectPath) {
-        router.push(redirectPath);
+        if (redirectPath) {
+          router.push(redirectPath);
+        } else {
+          router.push(
+            result.data?.role === USER_ROLE.Admin
+              ? "/dashboard/admin"
+              : result.data?.role === USER_ROLE.Technician
+                ? "/dashboard/technician"
+                : "/dashboard/customer",
+          );
+        }
       } else {
-        router.push(
-          result.data?.role === USER_ROLE.Admin
-            ? "/dashboard/admin"
-            : result.data?.role === USER_ROLE.Technician
-              ? "/dashboard/technician"
-              : "/dashboard/customer",
-        );
+        toast.add({
+          type: "error",
+          description: result.message
+            ? result.message
+            : "Something went wrong! Please try again.",
+        });
       }
     } catch (error: unknown) {
+      console.error(error, "Error from login form.");
       toast.add({
         type: "error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong! Please try again.",
+        description: "Something went wrong! Please try again.",
       });
     }
   };

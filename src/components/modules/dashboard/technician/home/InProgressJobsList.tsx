@@ -41,7 +41,19 @@ function InProgressJobRow({
     setIsSubmitting(true);
     setError(null);
     try {
-      await handleBookingStatus(statusCompleted, id);
+      const result = await handleBookingStatus(statusCompleted, id);
+
+      if (!result?.success) {
+        toast.add({
+          type: "error",
+          description:
+            result?.message ?? "Couldn't change the status! Please try again.",
+        });
+
+        setIsSubmitting(false);
+        return;
+      }
+
       toast.add({
         type: "success",
         description: `Booking '${statusCompleted.status}`,
@@ -51,11 +63,12 @@ function InProgressJobRow({
 
       onStatusChange(id, statusCompleted.status);
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again!",
-      );
+      console.error(error, "Error from In Progress Job Row Component!");
+      setIsSubmitting(false);
+      toast.add({
+        type: "error",
+        description: "Couldn't change the status! Please try again.",
+      });
     }
   }
 

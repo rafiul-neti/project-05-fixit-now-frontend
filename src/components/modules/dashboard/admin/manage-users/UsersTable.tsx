@@ -72,36 +72,35 @@ export default function UsersTable({ initialUsers }: UsersTableProps) {
     });
 
     try {
-      const { data: result, message } = await updateUserStatus(user.id, {
+      const result = await updateUserStatus(user.id, {
         status: nextStatus,
       });
 
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.id === user.id ? { ...u, status: result.status } : u,
-        ),
-      );
+      if (result.success && result.data) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === user.id ? { ...u, status: result.data?.status } : u,
+          ),
+        );
 
-      toast.add({
-        type: "success",
-        description: message,
-      });
+        toast.add({
+          type: "success",
+          description: result.message,
+        });
+      }
+
+      if (!result.success) {
+        setErrorByUserId((prev) => ({
+          ...prev,
+          [user.id]: result.message ?? "Couldn't update this user. Try again.",
+        }));
+      }
     } catch (error) {
+      console.error(error);
       setErrorByUserId((prev) => ({
         ...prev,
-        [user.id]:
-          error instanceof Error
-            ? error.message
-            : "Couldn't update this user. Try again.",
+        [user.id]: "Couldn't update this user. Try again.",
       }));
-
-      toast.add({
-        type: "error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Couldn't update this user. Try again.",
-      });
     } finally {
       setPendingUserId(null);
     }

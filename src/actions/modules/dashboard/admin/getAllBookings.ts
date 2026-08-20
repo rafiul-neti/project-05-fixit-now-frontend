@@ -2,7 +2,12 @@ import { getAccessToken } from "@/service/getAccessToken";
 
 export async function getAllBookings() {
   const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You are not logged in! Please log in.",
+    };
+  }
 
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/admin/bookings`, {
     method: "GET",
@@ -19,7 +24,15 @@ export async function getAllBookings() {
 
   const result = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: result.success,
+      message: result.message,
+    };
+  }
 
-  return result.data;
+  return {
+    success: result.success,
+    data: result.data,
+  };
 }

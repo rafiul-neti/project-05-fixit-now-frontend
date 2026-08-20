@@ -2,7 +2,21 @@ import { getAllCategories } from "@/actions/modules/dashboard/admin/getAllCatego
 import ManageCategoriesClient from "@/components/modules/dashboard/admin/manage-categories/ManageCategoriesClient";
 
 export default async function ManageCategoriesPage() {
-  const categories = await getAllCategories();
+  const result = await getAllCategories();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the dashboard. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data: categories } = result;
 
   return (
     <section className="min-h-screen bg-(--background-secondary) py-10">

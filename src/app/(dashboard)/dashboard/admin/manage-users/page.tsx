@@ -2,7 +2,21 @@ import { getAllUsers } from "@/actions/modules/dashboard/admin/getAllUsers";
 import UsersTable from "@/components/modules/dashboard/admin/manage-users/UsersTable";
 
 export default async function ManageUsersPage() {
-  const users = await getAllUsers();
+  const result = await getAllUsers();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the dashboard. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data: users } = result;
 
   return (
     <div className="fixit-container py-10 flex flex-col gap-6">

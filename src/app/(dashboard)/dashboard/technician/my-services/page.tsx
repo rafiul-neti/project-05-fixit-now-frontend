@@ -2,7 +2,21 @@ import { getTechnicianServices } from "@/actions/modules/dashboard/technician/ge
 import { TechnicianServicesList } from "@/components/modules/dashboard/technician/my-services/TechnicianServicesList";
 
 export default async function MyServicesPage() {
-  const services = await getTechnicianServices();
+  const result = await getTechnicianServices();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen bg-(--background-secondary) py-10">
+        <div className="fixit-container">
+          <div className="fixit-card p-8 text-center text-sm text-secondary">
+            {result.message ?? "Couldn't load the page. Please try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data: services } = result;
 
   return (
     <div className="min-h-screen bg-(--background-secondary) py-10">

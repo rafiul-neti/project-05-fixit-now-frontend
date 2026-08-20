@@ -75,27 +75,25 @@ export function BookNowDialog({
   async function onSubmit(values: BookingFormInput) {
     setSubmitError(null);
     try {
-      // TODO: call create-booking action once confirmed, passing
-      // technicianId + serviceId (need to thread this through — currently
-      // only serviceName/serviceCategory strings are available on this
-      // component) + values.useExistingAddress, and only the address
-      // fields when useExistingAddress is false. On success, probably
-      // redirect to the new booking's detail page or a confirmation
-      // screen rather than just closing the dialog.
-      await bookService(technicianId, serviceId, values);
-      setOpen(false);
+      const result = await bookService(technicianId, serviceId, values);
 
+      if (!result.success) {
+        setSubmitError(result.message);
+        return;
+      }
+
+      setOpen(false);
       toast.add({
         type: "success",
         description:
           "Thank you for booking the service. You will be contacted by the technician as soon as possible.",
       });
     } catch (err) {
-      setSubmitError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again.",
-      );
+      console.error(err);
+      toast.add({
+        type: "error",
+        description: "Something went wrong. Please try again!",
+      });
     }
   }
 

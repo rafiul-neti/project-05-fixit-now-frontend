@@ -2,8 +2,13 @@ import { GetAllUsersResponse } from "@/lib/types/modules/admin/admin.types";
 import { getAccessToken } from "@/service/getAccessToken";
 
 export async function getAllUsers() {
-  const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/admin/users`, {
     method: "GET",
@@ -20,7 +25,12 @@ export async function getAllUsers() {
 
   const result: GetAllUsersResponse = await res.json();
 
-  if (!result.success) throw new Error(result.message);
+  if (!result.success) {
+    return {
+      success: result.success,
+      message: result.message,
+    };
+  }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }

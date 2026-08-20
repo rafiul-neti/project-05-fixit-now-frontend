@@ -6,8 +6,13 @@ import { getAccessToken } from "@/service/getAccessToken";
 export async function getTechnicianIncomingBookings(status: {
   status: BookingStatus;
 }) {
-  const { success, accessToken, message } = await getAccessToken();
-  if (!success) throw new Error(message);
+  const { success, message, accessToken } = await getAccessToken();
+  if (!success) {
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
+  }
 
   const res = await fetch(
     `${process.env.BACKEND_API_URL}/api/technicians/technician/bookings?status=${status.status}`,
@@ -28,8 +33,11 @@ export async function getTechnicianIncomingBookings(status: {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
-  return result.data;
+  return { success: result.success, data: result.data };
 }

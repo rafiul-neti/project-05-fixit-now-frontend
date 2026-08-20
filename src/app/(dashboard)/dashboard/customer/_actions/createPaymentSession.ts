@@ -9,15 +9,24 @@ const bookingIdSchema = z.object({
 });
 
 export async function createPaymentSession(id: { bookingId: string }) {
-  const { success, accessToken, message } = await getAccessToken();
+  const { success, message, accessToken } = await getAccessToken();
   if (!success) {
-    throw new Error(message);
+    return {
+      success: false,
+      message: message ?? "You're not logged in! Please log in.",
+    };
   }
 
-  const parsed = bookingIdSchema.safeParse(id);
+  const parsed = bookingIdSchema.safeParse({ id });
   if (!parsed.success) {
-    throw new Error("Invalid booking reference.");
+    const parsedMessage =
+      parsed.error.issues[0]?.message ?? "Invalid booking reference!";
+    return {
+      success: parsed.success,
+      message: parsedMessage,
+    };
   }
+
   const { bookingId } = parsed.data;
 
   const res = await fetch(
@@ -34,10 +43,13 @@ export async function createPaymentSession(id: { bookingId: string }) {
   const result = await res.json();
 
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      success: result.success,
+      message: result.message,
+    };
   }
 
   revalidateTag("customer-bookings", "max");
 
-  return result.data.paymentURL;
+  return { success: true, paymentURL: result.data.paymentURL };
 }
