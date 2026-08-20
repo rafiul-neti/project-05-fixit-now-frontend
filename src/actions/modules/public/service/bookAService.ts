@@ -3,6 +3,7 @@
 import { getAccessToken } from "@/service/getAccessToken";
 import { getMe } from "@/service/getMe";
 import { BookingFormInput } from "@/validation/schemas/modules/public/booking-form.validation";
+import { revalidateTag } from "next/cache";
 
 export async function bookService(
   technicianId: string,
@@ -49,6 +50,8 @@ export async function bookService(
       message: result.message,
     };
   }
+
+  revalidateTag("customer-bookings", "max");
 
   return result;
 }
