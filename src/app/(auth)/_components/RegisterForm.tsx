@@ -52,7 +52,7 @@ const RegisterForm = () => {
         });
 
         reset();
-
+        
         router.push("/login");
       } else {
         toast.add({

@@ -38,7 +38,11 @@ export const loginAction = async ({ email, password }: LoginInput) => {
     });
   }
 
-  return { data: result, message: result.message };
+  return {
+    success: result.success,
+    data: result.data,
+    message: result.message,
+  };
 };
 
 export const registerAction = async (data: RegisterOutput) => {
@@ -70,5 +74,9 @@ export const registerAction = async (data: RegisterOutput) => {
     };
   }
 
-  return { success: result.success, data: result };
+  return {
+    success: result.success,
+    message: result.message,
+    data: result.data,
+  };
 };
